@@ -28,7 +28,6 @@ repositories {
 
 extra["vaadinVersion"] = "24.3.6"
 extra["mockkVersion"] = "4.0.2"
-//extra["jakartaVersion"] = "3.1.0"
 
 dependencies {
     /*base*/
@@ -36,7 +35,6 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     /*web*/
-//    implementation("jakarta.ws.rs:jakarta.ws.rs-api:${property("jakartaVersion")}")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-hateoas")
