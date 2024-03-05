@@ -1,6 +1,7 @@
 package com.mavi.memorize.ui.components
 
 import com.mavi.memorize.api.VocabulariesApi
+import com.mavi.memorize.api.request.AddVocabularyRequest
 import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.button.ButtonVariant
 import com.vaadin.flow.component.dialog.Dialog
@@ -10,7 +11,13 @@ import com.vaadin.flow.component.textfield.TextArea
 import com.vaadin.flow.component.textfield.TextField
 
 
-class AddVocabularyDialog(private val api: VocabulariesApi) : Dialog() {
+class AddVocabularyDialog(private val api: VocabulariesApi, private val onSearch: Runnable) : Dialog() {
+    private val word = TextField("Word")
+    private val pron = TextField("Pron.")
+    private val meaning = TextField("Meaning")
+    private val partOfSpeech = TextField("Part Of Speech")
+    private val sentence = TextArea("Sentence")
+
     init {
         isModal = false
         isDraggable = true
@@ -24,11 +31,6 @@ class AddVocabularyDialog(private val api: VocabulariesApi) : Dialog() {
     }
 
     private fun addForm() {
-        val word = TextField("Word")
-        val pron = TextField("Pron.")
-        val meaning = TextField("Meaning")
-        val partOfSpeech = TextField("Part Of Speech")
-        val sentence = TextArea("Sentence")
         val form = FormLayout(word, pron, meaning, partOfSpeech, sentence)
         form.setColspan(sentence, 2)
         add(form)
@@ -37,7 +39,16 @@ class AddVocabularyDialog(private val api: VocabulariesApi) : Dialog() {
     private fun addFooterActions() {
         val cancelBtn = Button("Cancel") { close() }
         val saveBtn = Button("Save") {
-//            api.addVocabulary()
+            api.addVocabulary(
+                AddVocabularyRequest(
+                    word = word.value.trim(),
+                    meaning = meaning.value.trim(),
+                    pron = pron.value.trim(),
+                    partOfSpeech = partOfSpeech.value.trim(),
+                    sentence = sentence.value.trim(),
+                )
+            )
+            onSearch.run()
             close()
         }
         saveBtn.addThemeVariants(ButtonVariant.LUMO_PRIMARY)

@@ -46,7 +46,7 @@ class VocabulariesView(
 
     private fun createVocabulariesGird(): Grid<Vocabulary> {
         grid.addColumn(Vocabulary::word).header("Word").sort("word")
-        grid.addColumn(Vocabulary::meaning).header("Meaning")
+        grid.addColumn(Vocabulary::meaning).header("Meaning").width(300).tooltip { it.meaning }
         grid.addColumn(Vocabulary::partOfSpeech).header("Part Of Speech")
         grid.addColumn(Vocabulary::pron).header("Pron.")
         grid.addColumn(Vocabulary::sentence).header("Sentence").width(590).tooltip { it.sentence }

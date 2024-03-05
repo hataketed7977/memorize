@@ -16,7 +16,7 @@ import org.vaadin.lineawesome.LineAwesomeIcon
 class VocabulariesFilter(api: VocabulariesApi, private val onSearch: Runnable) : FormLayout() {
     private val word = createWordText()
     private val study = createStudySelect()
-    private val addVocabularyDialog = AddVocabularyDialog(api)
+    private val addVocabularyDialog = AddVocabularyDialog(api, onSearch)
 
     init {
         setWidthFull()
