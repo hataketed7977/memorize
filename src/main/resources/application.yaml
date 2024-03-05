@@ -5,3 +5,6 @@ spring:
     password: mywords
 server:
   port: 8888
+  error:
+    include-stacktrace: ON_PARAM
+    include-message: ALWAYS
