@@ -1,13 +1,17 @@
 package com.mavi.memorize.ui.pages
 
-import com.mavi.memorize.ui.model.response.VocabularyResponse
-import com.mavi.memorize.ui.model.response.toRepresentation
-import com.mavi.memorize.domain.model.Vocabularies
+import com.mavi.memorize.api.Vocabularies
+import com.mavi.memorize.data.entity.Vocabulary
 import com.mavi.memorize.ui.components.VocabulariesFilter
+import com.mavi.memorize.ui.helper.header
+import com.mavi.memorize.ui.helper.sort
+import com.mavi.memorize.ui.helper.tooltip
+import com.mavi.memorize.ui.helper.width
 import com.vaadin.flow.component.dependency.Uses
 import com.vaadin.flow.component.grid.Grid
 import com.vaadin.flow.component.icon.Icon
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
+import com.vaadin.flow.data.provider.Query
 import com.vaadin.flow.router.PageTitle
 import com.vaadin.flow.router.Route
 import com.vaadin.flow.router.RouteAlias
@@ -23,46 +27,43 @@ import java.time.format.DateTimeFormatter
 class VocabulariesView(
     private val vocabularies: Vocabularies
 ) : VerticalLayout() {
-    private val grid = Grid(VocabularyResponse::class.java, false)
+    private val grid = Grid(Vocabulary::class.java, false)
     private val filter = VocabulariesFilter { refreshGrid() }
 
     companion object {
         private val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
             .withZone(ZoneId.of("Asia/Shanghai"))
 
-        fun formatCreatedAt(vocabulary: VocabularyResponse): String = formatter.format(vocabulary.createdAt)
+        fun formatCreatedAt(vocabulary: Vocabulary): String = formatter.format(vocabulary.createdAt)
+        fun formatStudy(vocabulary: Vocabulary): String = if (vocabulary.study) "Yes" else "No"
     }
 
     init {
         addClassName("grid-with-filters-view")
         setSizeFull()
-        isPadding = false
-        isSpacing = false
         add(filter, createVocabulariesGird())
     }
 
-    private fun createVocabulariesGird(): Grid<VocabularyResponse> {
-        grid.addColumn(VocabularyResponse::word).setHeader("Word").setSortable(true)
-            .setSortProperty("word")
-        grid.addColumn(VocabularyResponse::meaning).setHeader("Meaning").setSortable(false)
-        grid.addColumn(VocabularyResponse::partOfSpeech).setHeader("Part Of Speech").setSortable(false)
-        grid.addColumn(VocabularyResponse::pron).setHeader("Pron.").setSortable(false)
-        grid.addColumn(VocabulariesView::formatCreatedAt).setHeader("Created At").setSortable(true)
-            .setSortProperty("createdAt")
-        grid.addColumn(VocabularyResponse::study).setHeader("Study").setSortable(true)
-            .setSortProperty("study")
+    private fun createVocabulariesGird(): Grid<Vocabulary> {
+        grid.addColumn(Vocabulary::word).header("Word").sort("word")
+        grid.addColumn(Vocabulary::meaning).header("Meaning")
+        grid.addColumn(Vocabulary::partOfSpeech).header("Part Of Speech")
+        grid.addColumn(Vocabulary::pron).header("Pron.")
+        grid.addColumn(Vocabulary::sentence).header("Sentence").width(590).tooltip { it.sentence }
+        grid.addColumn(VocabulariesView::formatStudy).header("Study").sort("study")
+        grid.addColumn(VocabulariesView::formatCreatedAt).header("Created At").sort("createdAt")
 
-        grid.width = "100%"
-        grid.setItems { query ->
-            vocabularies.findByPage(
-                word = filter.wordValue(),
-                study = filter.studyValue(),
-                pageRequest = VaadinSpringDataHelpers.toSpringPageRequest(query)
-            ).map { it.toRepresentation() }.stream()
-        }
+        grid.setWidthFull()
+        grid.setItems { fetchData(it) }
         grid.addSortListener { refreshGrid() }
         return grid
     }
+
+    private fun fetchData(query: Query<Vocabulary, *>) = vocabularies.findByPage(
+        word = filter.wordValue(),
+        study = filter.studyValue(),
+        pageRequest = VaadinSpringDataHelpers.toSpringPageRequest(query)
+    ).stream()
 
     private fun refreshGrid() {
         grid.dataProvider.refreshAll()

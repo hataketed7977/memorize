@@ -9,6 +9,7 @@ import com.vaadin.flow.component.select.Select
 import com.vaadin.flow.component.textfield.TextField
 import com.vaadin.flow.dom.Style
 import com.vaadin.flow.theme.lumo.LumoUtility
+import org.vaadin.lineawesome.LineAwesomeIcon
 
 
 class VocabulariesFilter(private val onSearch: Runnable) : FormLayout() {
@@ -24,7 +25,12 @@ class VocabulariesFilter(private val onSearch: Runnable) : FormLayout() {
             LumoUtility.BoxSizing.BORDER
         )
         val actions = createActions()
-        add(word, study, Div(), actions)
+
+        val addBtn = Button("Add New")
+        addBtn.icon = LineAwesomeIcon.PLUS_SOLID.create()
+        addBtn.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_SUCCESS)
+
+        add(word, study, Div(addBtn), actions, Div())
     }
 
     private fun createWordText(): TextField {

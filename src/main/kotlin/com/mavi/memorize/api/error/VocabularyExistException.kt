@@ -1,4 +1,4 @@
-package com.mavi.memorize.ui.model.error
+package com.mavi.memorize.api.error
 
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException

@@ -1,7 +1,5 @@
-package com.mavi.memorize.domain.association.db.po
+package com.mavi.memorize.data.entity
 
-import com.mavi.memorize.domain.description.VocabularyDescription
-import com.mavi.memorize.domain.model.Vocabulary
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
@@ -10,7 +8,7 @@ import java.time.Instant
 
 @Entity
 @Table(name = "t_vocabularies")
-class VocabularyPO {
+class Vocabulary {
     @Id
     lateinit var id: String
     lateinit var word: String
@@ -22,21 +20,8 @@ class VocabularyPO {
 
     var study: Boolean = false
     var del: Boolean = false
+    var sentence: String? = null
 
     @Column(name = "created_at")
     lateinit var createdAt: Instant
-}
-
-fun VocabularyPO.toModel(): Vocabulary {
-    return Vocabulary(
-        identity = id,
-        description = VocabularyDescription(
-            word = word,
-            meaning = meaning,
-            pron = pron,
-            partOfSpeech = partOfSpeech,
-            study = study,
-            createdAt = createdAt
-        )
-    )
 }
