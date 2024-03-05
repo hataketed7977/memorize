@@ -1,5 +1,6 @@
 package com.mavi.memorize
 
+import com.vaadin.flow.theme.Theme
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
@@ -7,5 +8,5 @@ import org.springframework.boot.runApplication
 class MemorizeApplication
 
 fun main(args: Array<String>) {
-	runApplication<MemorizeApplication>(*args)
+    runApplication<MemorizeApplication>(*args)
 }

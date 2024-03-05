@@ -7,5 +7,5 @@ import org.springframework.data.domain.PageRequest
 
 interface Vocabularies : HasMany<VocabularyId, Vocabulary> {
     fun addVocabulary(description: VocabularyDescription): Vocabulary
-    fun findByPage(pageRequest: PageRequest, study: Boolean?): Page<Vocabulary>
+    fun findByPage(word: String?, study: Boolean?, pageRequest: PageRequest): Page<Vocabulary>
 }

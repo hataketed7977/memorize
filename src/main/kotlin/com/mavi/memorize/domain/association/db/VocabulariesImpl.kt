@@ -35,18 +35,9 @@ class VocabulariesImpl(
         return vocabularyRepository.saveAndFlush(po).toModel()
     }
 
-    override fun findByPage(pageRequest: PageRequest, study: Boolean?): Page<Vocabulary> {
-        val pageable = if (pageRequest.pageSize > MAX_PAGE_SIZE) {
-            PageRequest.of(pageRequest.pageNumber, pageRequest.pageSize)
-        } else {
-            pageRequest
-        }.withSort(DEFAULT_SORT)
-
-        return if (study == null) {
-            vocabularyRepository.findAllByDelIsFalse(pageable)
-        } else {
-            vocabularyRepository.findAllByDelIsFalseAndStudy(study, pageable)
-        }.map { it.toModel() }
+    override fun findByPage(word: String?, study: Boolean?, pageRequest: PageRequest): Page<Vocabulary> {
+        return vocabularyRepository.findByPage(word, study, pageRequest)
+            .map { it.toModel() }
     }
 
     override fun findAll(): Collection<Vocabulary> {

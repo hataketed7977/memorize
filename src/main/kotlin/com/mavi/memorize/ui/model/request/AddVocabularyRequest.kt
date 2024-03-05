@@ -1,4 +1,4 @@
-package com.mavi.memorize.api.request
+package com.mavi.memorize.ui.model.request
 
 import com.mavi.memorize.domain.description.VocabularyDescription
 

@@ -28,6 +28,7 @@ repositories {
 
 extra["vaadinVersion"] = "24.3.6"
 extra["mockkVersion"] = "4.0.2"
+extra["lineAwesomeVersion"] = "2.0.0"
 
 dependencies {
     /*base*/
@@ -39,6 +40,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-hateoas")
     implementation("com.vaadin:vaadin-spring-boot-starter")
+    implementation("org.parttio:line-awesome:${property("lineAwesomeVersion")}")
     /*data*/
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.flywaydb:flyway-core")

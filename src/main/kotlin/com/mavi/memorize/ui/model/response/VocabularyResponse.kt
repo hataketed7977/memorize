@@ -1,4 +1,4 @@
-package com.mavi.memorize.api.response
+package com.mavi.memorize.ui.model.response
 
 import com.mavi.memorize.domain.model.Vocabulary
 import java.time.Instant
