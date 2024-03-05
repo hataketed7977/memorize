@@ -1,6 +1,7 @@
 package com.mavi.memorize.api
 
 import com.mavi.memorize.api.error.VocabularyExistException
+import com.mavi.memorize.api.error.VocabularyNotExistException
 import com.mavi.memorize.api.request.AddVocabularyRequest
 import com.mavi.memorize.api.request.toDescription
 import com.mavi.memorize.api.response.VocabularyResponse
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/apis/vocabularies")
-class VocabulariesController(
+class VocabulariesApi(
     private val vocabularies: Vocabularies
 ) {
     @PostMapping
@@ -37,4 +38,13 @@ class VocabulariesController(
     ): Page<Vocabulary> {
         return vocabularies.findByPage(PageRequest.of(pageNumber, pageSize), study)
     }
+
+    @GetMapping("{id}")
+    fun findById(@PathVariable("id") id: String): VocabularyResponse {
+        return vocabularies.findByIdentity(id).map { it.toRepresentation() }
+            .orElseThrow {
+                VocabularyNotExistException(id)
+            }
+    }
+
 }

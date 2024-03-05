@@ -54,7 +54,7 @@ class VocabulariesImpl(
         return vocabularyRepository.findAllByDelIsFalse(pageable).map { it.toModel() }.content
     }
 
-    override fun findByIdentity(identifier: VocabularyId): Vocabulary {
-        return vocabularyRepository.findById(identifier).map { it.toModel() }.get()
+    override fun findByIdentity(identifier: VocabularyId): Optional<Vocabulary> {
+        return vocabularyRepository.findById(identifier).map { it.toModel() }
     }
 }
