@@ -1,6 +1,6 @@
 package com.mavi.memorize.ui.pages
 
-import com.mavi.memorize.api.Vocabularies
+import com.mavi.memorize.api.VocabulariesApi
 import com.mavi.memorize.data.entity.Vocabulary
 import com.mavi.memorize.ui.components.VocabulariesFilter
 import com.mavi.memorize.ui.helper.header
@@ -25,10 +25,10 @@ import java.time.format.DateTimeFormatter
 @RouteAlias(value = "", layout = MainView::class)
 @Uses(Icon::class)
 class VocabulariesView(
-    private val vocabularies: Vocabularies
+    private val api: VocabulariesApi
 ) : VerticalLayout() {
     private val grid = Grid(Vocabulary::class.java, false)
-    private val filter = VocabulariesFilter { refreshGrid() }
+    private val filter = VocabulariesFilter(api) { refreshGrid() }
 
     companion object {
         private val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
@@ -59,7 +59,7 @@ class VocabulariesView(
         return grid
     }
 
-    private fun fetchData(query: Query<Vocabulary, *>) = vocabularies.findByPage(
+    private fun fetchData(query: Query<Vocabulary, *>) = api.findByPage(
         word = filter.wordValue(),
         study = filter.studyValue(),
         pageRequest = VaadinSpringDataHelpers.toSpringPageRequest(query)

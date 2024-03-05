@@ -1,6 +1,6 @@
 package com.mavi.memorize.data
 
-import com.mavi.memorize.api.Vocabularies
+import com.mavi.memorize.api.VocabulariesApi
 import com.mavi.memorize.api.request.AddVocabularyRequest
 import com.mavi.memorize.data.entity.Vocabulary
 import com.mavi.memorize.data.repository.VocabularyRepository
@@ -11,9 +11,9 @@ import java.time.Instant
 import java.util.*
 
 @Component
-class VocabulariesImpl(
+class VocabulariesApiImpl(
     private val vocabularyRepository: VocabularyRepository
-) : Vocabularies {
+) : VocabulariesApi {
     override fun addVocabulary(request: AddVocabularyRequest): Vocabulary {
         val entity = Vocabulary()
         entity.id = UUID.randomUUID().toString()

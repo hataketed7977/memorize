@@ -1,5 +1,6 @@
 package com.mavi.memorize.ui.components
 
+import com.mavi.memorize.api.VocabulariesApi
 import com.vaadin.flow.component.Key
 import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.button.ButtonVariant
@@ -12,9 +13,10 @@ import com.vaadin.flow.theme.lumo.LumoUtility
 import org.vaadin.lineawesome.LineAwesomeIcon
 
 
-class VocabulariesFilter(private val onSearch: Runnable) : FormLayout() {
+class VocabulariesFilter(api: VocabulariesApi, private val onSearch: Runnable) : FormLayout() {
     private val word = createWordText()
     private val study = createStudySelect()
+    private val addVocabularyDialog = AddVocabularyDialog(api)
 
     init {
         setWidthFull()
@@ -24,13 +26,9 @@ class VocabulariesFilter(private val onSearch: Runnable) : FormLayout() {
             LumoUtility.Padding.Vertical.MEDIUM,
             LumoUtility.BoxSizing.BORDER
         )
-        val actions = createActions()
-
-        val addBtn = Button("Add New")
-        addBtn.icon = LineAwesomeIcon.PLUS_SOLID.create()
-        addBtn.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_SUCCESS)
-
-        add(word, study, Div(addBtn), actions, Div())
+        val search = createSearchActions()
+        val addBtn = addNew()
+        add(word, study, Div(), search, Div(addBtn))
     }
 
     private fun createWordText(): TextField {
@@ -52,7 +50,7 @@ class VocabulariesFilter(private val onSearch: Runnable) : FormLayout() {
         return study
     }
 
-    private fun createActions(): Div {
+    private fun createSearchActions(): Div {
         val resetBtn = Button("Reset")
         resetBtn.addClickListener {
             word.clear()
@@ -70,6 +68,16 @@ class VocabulariesFilter(private val onSearch: Runnable) : FormLayout() {
         actions.style.setJustifyContent(Style.JustifyContent.FLEX_END)
         actions.style.setAlignItems(Style.AlignItems.FLEX_END)
         return actions
+    }
+
+    private fun addNew(): Button {
+        val addBtn = Button("Add New")
+        addBtn.icon = LineAwesomeIcon.PLUS_SOLID.create()
+        addBtn.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_SUCCESS)
+        addBtn.addClickListener {
+            addVocabularyDialog.open()
+        }
+        return addBtn
     }
 
     fun wordValue(): String? {
