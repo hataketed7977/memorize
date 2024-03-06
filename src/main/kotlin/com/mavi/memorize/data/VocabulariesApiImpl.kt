@@ -31,4 +31,8 @@ class VocabulariesApiImpl(
     override fun findByPage(word: String?, study: Boolean?, pageRequest: PageRequest): Page<Vocabulary> {
         return vocabularyRepository.findByPage(word, study, pageRequest)
     }
+
+    override fun removeVocabularyById(id: String) {
+        vocabularyRepository.deleteById(id)
+    }
 }

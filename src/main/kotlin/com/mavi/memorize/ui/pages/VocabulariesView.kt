@@ -7,9 +7,15 @@ import com.mavi.memorize.ui.helper.header
 import com.mavi.memorize.ui.helper.sort
 import com.mavi.memorize.ui.helper.tooltip
 import com.mavi.memorize.ui.helper.width
+import com.vaadin.flow.component.button.Button
+import com.vaadin.flow.component.button.ButtonVariant
+import com.vaadin.flow.component.confirmdialog.ConfirmDialog
 import com.vaadin.flow.component.dependency.Uses
 import com.vaadin.flow.component.grid.Grid
+import com.vaadin.flow.component.grid.GridVariant
+import com.vaadin.flow.component.html.Div
 import com.vaadin.flow.component.icon.Icon
+import com.vaadin.flow.component.icon.VaadinIcon
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.data.provider.Query
 import com.vaadin.flow.router.PageTitle
@@ -29,6 +35,7 @@ class VocabulariesView(
 ) : VerticalLayout() {
     private val grid = Grid(Vocabulary::class.java, false)
     private val filter = VocabulariesFilter(api) { refreshGrid() }
+    private val deleteConfirmDialog = createDeleteConfirmDialog()
 
     companion object {
         private val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
@@ -39,9 +46,11 @@ class VocabulariesView(
     }
 
     init {
-        addClassName("grid-with-filters-view")
         setSizeFull()
-        add(filter, createVocabulariesGird())
+        val div = Div(createVocabulariesGird())
+        div.setSizeFull()
+        div.addClassNames("px-l", "box-border")
+        add(filter, div)
     }
 
     private fun createVocabulariesGird(): Grid<Vocabulary> {
@@ -49,11 +58,13 @@ class VocabulariesView(
         grid.addColumn(Vocabulary::meaning).header("Meaning").width(300).tooltip { it.meaning }
         grid.addColumn(Vocabulary::partOfSpeech).header("Part Of Speech")
         grid.addColumn(Vocabulary::pron).header("Pron.")
-        grid.addColumn(Vocabulary::sentence).header("Sentence").width(590).tooltip { it.sentence }
+        grid.addColumn(Vocabulary::sentence).header("Sentence").width(550).tooltip { it.sentence }
         grid.addColumn(VocabulariesView::formatStudy).header("Study").sort("study")
         grid.addColumn(VocabulariesView::formatCreatedAt).header("Created At").sort("createdAt")
+        grid.addComponentColumn { createDeleteBtn(it) }
 
-        grid.setWidthFull()
+        //TODO edit
+        grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT);
         grid.setItems { fetchData(it) }
         grid.addSortListener { refreshGrid() }
         return grid
@@ -67,5 +78,28 @@ class VocabulariesView(
 
     private fun refreshGrid() {
         grid.dataProvider.refreshAll()
+    }
+
+    private fun createDeleteBtn(vocabulary: Vocabulary): Button {
+        val delBtn = Button("Delete")
+        delBtn.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_ERROR, ButtonVariant.LUMO_TERTIARY)
+        delBtn.icon = Icon(VaadinIcon.TRASH)
+        delBtn.addClickListener {
+            deleteConfirmDialog.setId(vocabulary.id)
+            deleteConfirmDialog.setText("Are you sure you want to delete word 【${vocabulary.word}?】")
+            deleteConfirmDialog.open()
+        }
+        return delBtn
+    }
+
+    private fun createDeleteConfirmDialog(): ConfirmDialog {
+        val dialog = ConfirmDialog()
+        dialog.setHeader("Delete operation")
+        dialog.setCancelable(true)
+        dialog.addConfirmListener {
+            api.removeVocabularyById(dialog.id.get())
+            refreshGrid()
+        }
+        return dialog
     }
 }
