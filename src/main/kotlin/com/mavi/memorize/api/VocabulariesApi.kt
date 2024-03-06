@@ -9,4 +9,5 @@ interface VocabulariesApi {
     fun addVocabulary(request: AddVocabularyRequest): Vocabulary
     fun findByPage(word: String?, study: Boolean?, pageRequest: PageRequest): Page<Vocabulary>
     fun removeVocabularyById(id: String)
+    fun updateVocabulary(item: Vocabulary): Vocabulary
 }

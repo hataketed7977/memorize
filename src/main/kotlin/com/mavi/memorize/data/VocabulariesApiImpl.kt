@@ -35,4 +35,8 @@ class VocabulariesApiImpl(
     override fun removeVocabularyById(id: String) {
         vocabularyRepository.deleteById(id)
     }
+
+    override fun updateVocabulary(item: Vocabulary): Vocabulary {
+        return vocabularyRepository.saveAndFlush(item)
+    }
 }
