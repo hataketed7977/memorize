@@ -17,9 +17,10 @@ interface VocabularyRepository : JpaRepository<Vocabulary, String> {
         pageable: Pageable
     ): Page<Vocabulary>
 
-    fun findAllByDelIsFalseAndStudyIsFalseOrderByCreatedAt(pageable: Pageable): List<Vocabulary>
+    fun findAllByDelIsFalseAndStudyIsFalseOrderByCreatedAt(pageable: Pageable): Page<Vocabulary>
 
     fun countByDelIsFalseAndStudyIsTrue(): Long
     fun countByDelIsFalseAndStudyIsFalse(): Long
     fun countByDelIsFalse(): Long
+    fun findAllByIdInAndDelIsFalse(id: List<String>, pageable: Pageable): Page<Vocabulary>
 }

@@ -29,4 +29,8 @@ class UnfamiliarWordsApiImpl(
             }
         return unfamiliarWordRepository.saveAllAndFlush(words)
     }
+
+    override fun findAll(): List<UnfamiliarWord> {
+        return unfamiliarWordRepository.findAll()
+    }
 }

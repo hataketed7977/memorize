@@ -17,13 +17,13 @@ import com.vaadin.flow.component.formlayout.FormLayout
 import com.vaadin.flow.component.formlayout.FormLayout.ResponsiveStep
 import com.vaadin.flow.component.html.H2
 import com.vaadin.flow.component.icon.Icon
+import com.vaadin.flow.component.icon.VaadinIcon
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.data.provider.Query
-import com.vaadin.flow.data.provider.QuerySortOrder
-import com.vaadin.flow.data.provider.SortDirection
 import com.vaadin.flow.router.Route
 import com.vaadin.flow.spring.data.VaadinSpringDataHelpers
+import org.springframework.data.domain.Sort
 import java.util.stream.Stream
 
 
@@ -45,6 +45,10 @@ class MemorizeView(
     }
 
     private fun createActions(): HorizontalLayout {
+        val refreshBtn = Button(VaadinIcon.REFRESH.create()) {
+            refreshGrid()
+        }
+
         val createBtn = Button("Create New Memorize") {
             taskDialog.open()
         }
@@ -52,7 +56,7 @@ class MemorizeView(
             //TODO
         }
         startBtn.addThemeVariants(ButtonVariant.LUMO_PRIMARY)
-        val container = HorizontalLayout(createBtn, startBtn)
+        val container = HorizontalLayout(refreshBtn, createBtn, startBtn)
         container.addClassName("px-l")
         container.setWidthFull()
         return container
@@ -99,11 +103,10 @@ class MemorizeView(
     }
 
     private fun fetchData(query: Query<Vocabulary, *>): Stream<Vocabulary> {
-        if (query.sortOrders.isEmpty())
-            query.sortOrders.add(QuerySortOrder("word", SortDirection.ASCENDING))
         val pageable = VaadinSpringDataHelpers.toSpringPageRequest(query)
-        //TODO
-        return Stream.empty()
+        pageable.withSort(Sort.by(Sort.Order.desc("word")))
+        val ids = unfamiliarWordsApi.findAll().map { it.vocabularyId }
+        return vocabulariesApi.findAllByIds(ids, pageable).stream()
     }
 
     private fun refreshGrid() {

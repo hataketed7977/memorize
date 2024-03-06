@@ -9,6 +9,7 @@ import com.mavi.memorize.data.entity.Vocabulary
 import com.mavi.memorize.data.repository.VocabularyRepository
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 import java.time.Instant
@@ -47,9 +48,13 @@ class VocabulariesApiImpl(
 
     override fun count(): Triple<All, Study, NotStudy> {
         return Triple(
-            first = vocabularyRepository.count(),
+            first = vocabularyRepository.countByDelIsFalse(),
             second = vocabularyRepository.countByDelIsFalseAndStudyIsTrue(),
             third = vocabularyRepository.countByDelIsFalseAndStudyIsFalse(),
         )
+    }
+
+    override fun findAllByIds(ids: List<String>, pageable: Pageable): Page<Vocabulary> {
+        return vocabularyRepository.findAllByIdInAndDelIsFalse(ids, pageable)
     }
 }
