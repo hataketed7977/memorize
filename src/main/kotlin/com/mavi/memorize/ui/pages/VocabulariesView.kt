@@ -18,12 +18,15 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.component.select.Select
 import com.vaadin.flow.data.binder.Binder
 import com.vaadin.flow.data.provider.Query
+import com.vaadin.flow.data.provider.QuerySortOrder
+import com.vaadin.flow.data.provider.SortDirection
 import com.vaadin.flow.router.PageTitle
 import com.vaadin.flow.router.Route
 import com.vaadin.flow.router.RouteAlias
 import com.vaadin.flow.spring.data.VaadinSpringDataHelpers
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import java.util.stream.Stream
 
 
 @PageTitle("Vocabularies")
@@ -146,11 +149,16 @@ class VocabulariesView(
         return dialog
     }
 
-    private fun fetchData(query: Query<Vocabulary, *>) = api.findByPage(
-        word = filter.wordValue(),
-        study = filter.studyValue(),
-        pageRequest = VaadinSpringDataHelpers.toSpringPageRequest(query)
-    ).stream()
+    private fun fetchData(query: Query<Vocabulary, *>): Stream<Vocabulary> {
+        if (query.sortOrders.isEmpty())
+            query.sortOrders.add(QuerySortOrder("word", SortDirection.ASCENDING))
+
+        return api.findByPage(
+            word = filter.wordValue(),
+            study = filter.studyValue(),
+            pageRequest = VaadinSpringDataHelpers.toSpringPageRequest(query)
+        ).stream()
+    }
 
     private fun refreshGrid() {
         grid.dataProvider.refreshAll()
