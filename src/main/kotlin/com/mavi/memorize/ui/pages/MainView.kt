@@ -7,9 +7,11 @@ import com.vaadin.flow.component.html.H1
 import com.vaadin.flow.component.orderedlayout.Scroller
 import com.vaadin.flow.component.sidenav.SideNav
 import com.vaadin.flow.component.sidenav.SideNavItem
+import com.vaadin.flow.router.PageTitle
 import com.vaadin.flow.theme.lumo.LumoUtility
 import org.vaadin.lineawesome.LineAwesomeIcon
 
+@PageTitle("Memorize Hub")
 class MainView : AppLayout() {
     companion object {
         private const val APP_NAME = "Memorize Hub"
@@ -36,7 +38,7 @@ class MainView : AppLayout() {
     private fun createNavigation(): SideNav {
         val nav = SideNav()
         nav.addItem(SideNavItem("Vocabularies", VocabulariesView::class.java, LineAwesomeIcon.BOOK_SOLID.create()))
-        nav.addItem(SideNavItem("Memorize", VocabulariesView::class.java, LineAwesomeIcon.BOOK_SOLID.create()))
+        nav.addItem(SideNavItem("Memorize", MemorizeView::class.java, LineAwesomeIcon.TASKS_SOLID.create()))
         return nav
     }
 

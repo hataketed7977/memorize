@@ -1,6 +1,5 @@
 package com.mavi.memorize.ui.components
 
-import com.mavi.memorize.api.VocabulariesApi
 import com.vaadin.flow.component.Key
 import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.button.ButtonVariant
@@ -10,13 +9,11 @@ import com.vaadin.flow.component.select.Select
 import com.vaadin.flow.component.textfield.TextField
 import com.vaadin.flow.dom.Style
 import com.vaadin.flow.theme.lumo.LumoUtility
-import org.vaadin.lineawesome.LineAwesomeIcon
 
 
-class VocabulariesFilter(api: VocabulariesApi, private val onSearch: Runnable) : FormLayout() {
+class VocabulariesFilter(private val onSearch: Runnable) : FormLayout() {
     private val word = createWordText()
     private val study = createStudySelect()
-    private val addVocabularyDialog = AddVocabularyDialog(api, onSearch)
 
     init {
         setWidthFull()
@@ -27,8 +24,7 @@ class VocabulariesFilter(api: VocabulariesApi, private val onSearch: Runnable) :
             LumoUtility.BoxSizing.BORDER
         )
         val search = createSearchActions()
-        val addBtn = addNew()
-        add(word, study, Div(), search, Div(addBtn))
+        add(word, study, Div(), search)
     }
 
     private fun createWordText(): TextField {
@@ -68,16 +64,6 @@ class VocabulariesFilter(api: VocabulariesApi, private val onSearch: Runnable) :
         actions.style.setJustifyContent(Style.JustifyContent.FLEX_END)
         actions.style.setAlignItems(Style.AlignItems.FLEX_END)
         return actions
-    }
-
-    private fun addNew(): Button {
-        val addBtn = Button("Add New Word")
-        addBtn.icon = LineAwesomeIcon.PLUS_SOLID.create()
-        addBtn.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_SUCCESS)
-        addBtn.addClickListener {
-            addVocabularyDialog.open()
-        }
-        return addBtn
     }
 
     fun wordValue(): String? {
