@@ -1,5 +1,6 @@
 package com.mavi.memorize.data
 
+import com.mavi.memorize.api.All
 import com.mavi.memorize.api.NotStudy
 import com.mavi.memorize.api.Study
 import com.mavi.memorize.api.VocabulariesApi
@@ -44,7 +45,11 @@ class VocabulariesApiImpl(
         return vocabularyRepository.saveAndFlush(item)
     }
 
-    override fun count(): Pair<Study, NotStudy> {
-        TODO("Not yet implemented")
+    override fun count(): Triple<All, Study, NotStudy> {
+        return Triple(
+            first = vocabularyRepository.count(),
+            second = vocabularyRepository.countByDelIsFalseAndStudyIsTrue(),
+            third = vocabularyRepository.countByDelIsFalseAndStudyIsFalse(),
+        )
     }
 }
