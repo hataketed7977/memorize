@@ -71,7 +71,7 @@ class VocabulariesFilter(api: VocabulariesApi, private val onSearch: Runnable) :
     }
 
     private fun addNew(): Button {
-        val addBtn = Button("Add New")
+        val addBtn = Button("Add New Word")
         addBtn.icon = LineAwesomeIcon.PLUS_SOLID.create()
         addBtn.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_SUCCESS)
         addBtn.addClickListener {

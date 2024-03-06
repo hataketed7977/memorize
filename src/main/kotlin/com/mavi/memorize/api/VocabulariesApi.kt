@@ -10,4 +10,9 @@ interface VocabulariesApi {
     fun findByPage(word: String?, study: Boolean?, pageRequest: PageRequest): Page<Vocabulary>
     fun removeVocabularyById(id: String)
     fun updateVocabulary(item: Vocabulary): Vocabulary
+
+    fun count(): Pair<Study, NotStudy>
 }
+
+typealias Study = Int
+typealias NotStudy = Int

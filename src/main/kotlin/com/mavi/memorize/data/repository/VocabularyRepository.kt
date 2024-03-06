@@ -10,9 +10,12 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface VocabularyRepository : JpaRepository<Vocabulary, String> {
-    @Query("SELECT v FROM Vocabulary v WHERE (:word is null or v.word LIKE %:word%) and (:study is null or v.study = :study)")
+    @Query("SELECT v FROM Vocabulary v WHERE v.del IS FALSE and (:word is null or v.word LIKE %:word%) and (:study is null or v.study = :study)")
     fun findByPage(
         @Param("word") word: String?,
-        @Param("study") study: Boolean?, pageable: Pageable
+        @Param("study") study: Boolean?,
+        pageable: Pageable
     ): Page<Vocabulary>
+
+    fun findAllByDelIsFalseAndStudyIsFalseOrderByCreatedAt(pageable: Pageable): List<Vocabulary>
 }

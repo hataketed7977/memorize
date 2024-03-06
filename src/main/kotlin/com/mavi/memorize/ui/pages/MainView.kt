@@ -36,6 +36,7 @@ class MainView : AppLayout() {
     private fun createNavigation(): SideNav {
         val nav = SideNav()
         nav.addItem(SideNavItem("Vocabularies", VocabulariesView::class.java, LineAwesomeIcon.BOOK_SOLID.create()))
+        nav.addItem(SideNavItem("Memorize", VocabulariesView::class.java, LineAwesomeIcon.BOOK_SOLID.create()))
         return nav
     }
 

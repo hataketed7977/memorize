@@ -1,5 +1,7 @@
 package com.mavi.memorize.data
 
+import com.mavi.memorize.api.NotStudy
+import com.mavi.memorize.api.Study
 import com.mavi.memorize.api.VocabulariesApi
 import com.mavi.memorize.api.request.AddVocabularyRequest
 import com.mavi.memorize.data.entity.Vocabulary
@@ -7,10 +9,12 @@ import com.mavi.memorize.data.repository.VocabularyRepository
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Component
+import org.springframework.transaction.annotation.Transactional
 import java.time.Instant
 import java.util.*
 
 @Component
+@Transactional
 class VocabulariesApiImpl(
     private val vocabularyRepository: VocabularyRepository
 ) : VocabulariesApi {
@@ -38,5 +42,9 @@ class VocabulariesApiImpl(
 
     override fun updateVocabulary(item: Vocabulary): Vocabulary {
         return vocabularyRepository.saveAndFlush(item)
+    }
+
+    override fun count(): Pair<Study, NotStudy> {
+        TODO("Not yet implemented")
     }
 }
