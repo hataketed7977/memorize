@@ -6,6 +6,9 @@ import com.mavi.memorize.api.Study
 import com.mavi.memorize.api.VocabulariesApi
 import com.mavi.memorize.api.request.AddVocabularyRequest
 import com.mavi.memorize.data.entity.Vocabulary
+import com.mavi.memorize.data.repository.FamiliarWordRepository
+import com.mavi.memorize.data.repository.IncorrectWordRepository
+import com.mavi.memorize.data.repository.UnfamiliarWordRepository
 import com.mavi.memorize.data.repository.VocabularyRepository
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
@@ -18,7 +21,10 @@ import java.util.*
 @Component
 @Transactional
 class VocabulariesApiImpl(
-    private val vocabularyRepository: VocabularyRepository
+    private val vocabularyRepository: VocabularyRepository,
+    private val familiarWordRepository: FamiliarWordRepository,
+    private val unfamiliarWordRepository: UnfamiliarWordRepository,
+    private val incorrectWordRepository: IncorrectWordRepository,
 ) : VocabulariesApi {
     override fun addVocabulary(request: AddVocabularyRequest): Vocabulary {
         val entity = Vocabulary()
@@ -39,6 +45,9 @@ class VocabulariesApiImpl(
     }
 
     override fun removeVocabularyById(id: String) {
+        familiarWordRepository.deleteByVocabularyId(id)
+        unfamiliarWordRepository.deleteByVocabularyId(id)
+        incorrectWordRepository.deleteByVocabularyId(id)
         vocabularyRepository.deleteById(id)
     }
 

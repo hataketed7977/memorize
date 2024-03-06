@@ -37,11 +37,16 @@ class MemorizeView(
 ) : VerticalLayout() {
     private val grid = VocabulariesGrid(vocabulariesApi, true) { fetchData(it) }
     private val taskDialog = createTaskDialog()
+    private val totalCount = readOnlyTextField("Total", Badge.DEFAULT)
+    private val studyCount = readOnlyTextField("Study", Badge.SUCCESS)
+    private val notStudyCount = readOnlyTextField("Not Study", Badge.CONTRAST)
+    private val unfamiliarCount = readOnlyTextField("Unfamiliar", Badge.DEFAULT)
+    private val familiarCount = readOnlyTextField("Familiar", Badge.SUCCESS)
+    private val incorrectCount = readOnlyTextField("Incorrect", Badge.ERROR)
 
     init {
         setSizeFull()
-        val actions = createActions()
-        add(counts(), actions, grid)
+        add(countsLayout(), createActions(), grid)
     }
 
     private fun createActions(): HorizontalLayout {
@@ -52,7 +57,7 @@ class MemorizeView(
         val createBtn = Button("Create New Memorize") {
             taskDialog.open()
         }
-        val startBtn = Button("Start Memorize") {
+        val startBtn = Button("Start Test") {
             //TODO
         }
         startBtn.addThemeVariants(ButtonVariant.LUMO_PRIMARY)
@@ -62,25 +67,20 @@ class MemorizeView(
         return container
     }
 
-    private fun counts(): FormLayout {
+    private fun countsLayout(): FormLayout {
         val form = FormLayout()
         form.addClassName("px-l")
-        val counts = vocabulariesApi.count()
         form.add(
-            readOnlyTextField("Total", "${counts.first}", Badge.DEFAULT),
-            readOnlyTextField("Study", "${counts.second}", Badge.SUCCESS),
-            readOnlyTextField("Not Study", "${counts.third}", Badge.CONTRAST),
-            readOnlyTextField("Unfamiliar", "${unfamiliarWordsApi.count()}", Badge.DEFAULT),
-            readOnlyTextField("Familiar", "${familiarWordsApi.count()}", Badge.SUCCESS),
-            readOnlyTextField("Incorrect", "${incorrectWordsApi.count()}", Badge.ERROR),
+            totalCount, studyCount, notStudyCount,
+            unfamiliarCount, familiarCount, incorrectCount
         )
         form.setResponsiveSteps(
             ResponsiveStep("0", 1),
             ResponsiveStep("500px", 3)
         )
+        refreshCounts()
         return form
     }
-
 
     private fun createTaskDialog(): Dialog {
         val dialog = Dialog()
@@ -111,5 +111,16 @@ class MemorizeView(
 
     private fun refreshGrid() {
         grid.refreshGrid()
+        refreshCounts()
+    }
+
+    private fun refreshCounts() {
+        val counts = vocabulariesApi.count()
+        totalCount.value = "${counts.first}"
+        studyCount.value = "${counts.second}"
+        notStudyCount.value = "${counts.third}"
+        familiarCount.value = "${familiarWordsApi.count()}"
+        unfamiliarCount.value = "${unfamiliarWordsApi.count()}"
+        incorrectCount.value = "${incorrectWordsApi.count()}"
     }
 }

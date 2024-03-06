@@ -11,11 +11,10 @@ enum class Badge(val value: String) {
     CONTRAST("badge contrast"),
 }
 
-fun readOnlyTextField(label: String, value: String, badge: Badge? = null): TextField {
+fun readOnlyTextField(label: String, badge: Badge? = null): TextField {
     val field = TextField()
     field.isReadOnly = true
     field.label = label
-    field.value = value
     badge?.let {
         field.getElement().themeList.add(badge.value)
     }

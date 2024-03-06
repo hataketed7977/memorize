@@ -8,4 +8,5 @@ import java.util.*
 @Repository
 interface IncorrectWordRepository : JpaRepository<IncorrectWord, String> {
     fun findByVocabularyId(vocabularyId: String): Optional<IncorrectWord>
+    fun deleteByVocabularyId(vocabularyId: String)
 }

@@ -5,4 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 
 @Repository
-interface UnfamiliarWordRepository : JpaRepository<UnfamiliarWord, String>
+interface UnfamiliarWordRepository : JpaRepository<UnfamiliarWord, String>{
+    fun deleteByVocabularyId(vocabularyId: String)
+}

@@ -19,7 +19,10 @@ class UnfamiliarWordsApiImpl(
     override fun count(): Long = unfamiliarWordRepository.count()
     override fun batchCreateUnfamiliarWords(number: Int): List<UnfamiliarWord> {
         val words = vocabularyRepository
-            .findAllByDelIsFalseAndStudyIsFalseOrderByCreatedAt(Pageable.ofSize(number))
+            .findAllByDelIsFalseAndStudyIsFalseAndIdNotIn(
+                findAll().map { it.vocabularyId },
+                Pageable.ofSize(number)
+            )
             .map {
                 val entity = UnfamiliarWord()
                 entity.id = UUID.randomUUID().toString()
