@@ -65,10 +65,10 @@ class VocabulariesView(
     }
 
     private fun createVocabulariesGird(): Grid<Vocabulary> {
-        grid.addColumn(Vocabulary::word).header("Word").width(300).sort("word")
+        grid.addColumn(Vocabulary::word).header("Word").width(120).sort("word")
             .bindInlineTextEditor({ it.word }, { it, v -> it.word = v })
 
-        grid.addColumn(Vocabulary::meaning).header("Meaning").width(300).tooltip { it.meaning }
+        grid.addColumn(Vocabulary::meaning).header("Meaning").width(200).tooltip { it.meaning }
             .bindInlineTextEditor({ it.meaning }, { it, v -> it.meaning = v })
 
         grid.addColumn(Vocabulary::partOfSpeech).header("Part Of Speech")
