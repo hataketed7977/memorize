@@ -21,6 +21,10 @@ class VocabulariesApiImpl(
     private val unfamiliarWordsApi: UnfamiliarWordsApi,
     private val incorrectWordsApi: IncorrectWordsApi
 ) : VocabulariesApi {
+    companion object {
+        private val familiarWordsReviewCycleDays = listOf<Long>(2, 4, 7, 20)
+    }
+
     override fun addVocabulary(request: AddVocabularyRequest): Vocabulary {
         val entity = Vocabulary()
         entity.id = UUID.randomUUID().toString()
@@ -65,13 +69,9 @@ class VocabulariesApiImpl(
     override fun findExamVocabularies(): List<Vocabulary> {
         val unfamiliarIds = unfamiliarWordsApi.findAll().map { it.vocabularyId }
         val incorrectIds = incorrectWordsApi.findAllByCountGreaterThanZero().map { it.vocabularyId }
-        val familiarIds = listOf(
-            familiarWordsApi.findByRound(1).filter { hasPassedDay(it.createdAt, 2) },
-            familiarWordsApi.findByRound(2).filter { hasPassedDay(it.createdAt, 4) },
-            familiarWordsApi.findByRound(3).filter { hasPassedDay(it.createdAt, 7) },
-            familiarWordsApi.findByRound(3).filter { hasPassedDay(it.createdAt, 7) },
-            familiarWordsApi.findByRound(4).filter { hasPassedDay(it.createdAt, 20) }
-        ).flatten().map { it.vocabularyId }
+        val familiarIds = familiarWordsReviewCycleDays.mapIndexed { index, day ->
+            familiarWordsApi.findByRound(index + 1).filter { hasPassedDay(it.createdAt, day) }
+        }.flatten().map { it.vocabularyId }
 
         return findAllByIds(
             (unfamiliarIds + incorrectIds + familiarIds).distinct(),
@@ -84,21 +84,20 @@ class VocabulariesApiImpl(
             .isBefore(Instant.now().truncatedTo(ChronoUnit.DAYS))
 
     override fun checkExamVocabularies(filled: Map<String, String>) {
-        //TODO incorrect word -1
         val ids = filled.map { it.key }.toList()
-        val vocabularies = vocabularyRepository.findAllByIdIn(ids)
-        vocabularies.forEach {
-            val word = filled[it.id]
-            if (word != null) {
-                it.study = true
-                if (it.word.lowercase() == word.lowercase()) {
+        vocabularyRepository.findAllByIdIn(ids)
+            .filter { filled[it.id] != null }
+            .forEach {
+                val word = filled[it.id]
+                if (it.word.lowercase() == word?.lowercase()) {
                     familiarWordsApi.addFamiliarWord(it.id)
+                    incorrectWordsApi.reduceCountByVocabularyId(it.id)
                 } else {
                     incorrectWordsApi.addIncorrectWord(it.id)
                 }
                 unfamiliarWordsApi.deleteByVocabularyId(it.id)
+                it.study = true
                 updateVocabulary(it)
             }
-        }
     }
 }

@@ -7,4 +7,5 @@ interface IncorrectWordsApi {
     fun addIncorrectWord(vocabularyId: String): IncorrectWord
     fun deleteByVocabularyId(id: String)
     fun findAllByCountGreaterThanZero(): List<IncorrectWord>
+    fun reduceCountByVocabularyId(vocabularyId: String)
 }

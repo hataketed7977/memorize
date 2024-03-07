@@ -38,4 +38,11 @@ class IncorrectWordsApiImpl(
     override fun findAllByCountGreaterThanZero(): List<IncorrectWord> {
         return incorrectWordRepository.findAllByCountGreaterThan(0)
     }
+
+    override fun reduceCountByVocabularyId(vocabularyId: String) {
+        incorrectWordRepository.findByVocabularyId(vocabularyId).ifPresent {
+            it.count -= 1
+            incorrectWordRepository.saveAndFlush(it)
+        }
+    }
 }
