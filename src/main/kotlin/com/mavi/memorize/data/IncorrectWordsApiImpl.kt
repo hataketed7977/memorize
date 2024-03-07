@@ -34,4 +34,8 @@ class IncorrectWordsApiImpl(
     override fun deleteByVocabularyId(id: String) {
         incorrectWordRepository.deleteByVocabularyId(id)
     }
+
+    override fun findAllByCountGreaterThanZero(): List<IncorrectWord> {
+        return incorrectWordRepository.findAllByCountGreaterThan(0)
+    }
 }

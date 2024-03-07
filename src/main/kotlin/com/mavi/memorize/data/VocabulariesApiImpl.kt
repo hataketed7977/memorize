@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 import java.time.Instant
+import java.time.temporal.ChronoUnit
 import java.util.*
 
 @Component
@@ -61,7 +62,29 @@ class VocabulariesApiImpl(
         return vocabularyRepository.findAllByIdInAndDelIsFalse(ids, pageable)
     }
 
-    override fun checkVocabulary(filled: Map<String, String>) {
+    override fun findExamVocabularies(): List<Vocabulary> {
+        val unfamiliarIds = unfamiliarWordsApi.findAll().map { it.vocabularyId }
+        val incorrectIds = incorrectWordsApi.findAllByCountGreaterThanZero().map { it.vocabularyId }
+        val familiarIds = listOf(
+            familiarWordsApi.findByRound(1).filter { hasPassedDay(it.createdAt, 2) },
+            familiarWordsApi.findByRound(2).filter { hasPassedDay(it.createdAt, 4) },
+            familiarWordsApi.findByRound(3).filter { hasPassedDay(it.createdAt, 7) },
+            familiarWordsApi.findByRound(3).filter { hasPassedDay(it.createdAt, 7) },
+            familiarWordsApi.findByRound(4).filter { hasPassedDay(it.createdAt, 20) }
+        ).flatten().map { it.vocabularyId }
+
+        return findAllByIds(
+            (unfamiliarIds + incorrectIds + familiarIds).distinct(),
+            Pageable.ofSize(Int.MAX_VALUE)
+        ).content
+    }
+
+    private fun hasPassedDay(instant: Instant, day: Long) =
+        instant.plus(day, ChronoUnit.DAYS).truncatedTo(ChronoUnit.DAYS)
+            .isBefore(Instant.now().truncatedTo(ChronoUnit.DAYS))
+
+    override fun checkExamVocabularies(filled: Map<String, String>) {
+        //TODO incorrect word -1
         val ids = filled.map { it.key }.toList()
         val vocabularies = vocabularyRepository.findAllByIdIn(ids)
         vocabularies.forEach {

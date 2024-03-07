@@ -6,4 +6,5 @@ interface FamiliarWordsApi {
     fun count(): Long
     fun addFamiliarWord(vocabularyId: String): FamiliarWord
     fun deleteByVocabularyId(id: String)
+    fun findByRound(round: Int): List<FamiliarWord>
 }

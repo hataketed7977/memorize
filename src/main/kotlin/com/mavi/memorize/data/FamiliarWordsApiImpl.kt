@@ -26,4 +26,14 @@ class FamiliarWordsApiImpl(
     override fun deleteByVocabularyId(id: String) {
         familiarWordRepository.deleteByVocabularyId(id)
     }
+
+    override fun findByRound(round: Int): List<FamiliarWord> {
+        return when (round) {
+            1 -> familiarWordRepository.findAllByRound1IsNotNull()
+            2 -> familiarWordRepository.findAllByRound2IsNotNull()
+            3 -> familiarWordRepository.findAllByRound3IsNotNull()
+            4 -> familiarWordRepository.findAllByRound4IsNotNull()
+            else -> familiarWordRepository.findAll()
+        }
+    }
 }

@@ -13,11 +13,9 @@ import com.vaadin.flow.component.icon.VaadinIcon
 import com.vaadin.flow.component.textfield.TextField
 
 
-class ExamDialog(
-    private val data: List<Vocabulary>,
-    private val api: VocabulariesApi
-) : Dialog() {
-    private val words = mutableListOf<TextField>()
+class ExamDialog(private val api: VocabulariesApi) : Dialog() {
+    private val fields = mutableListOf<TextField>()
+    private var vocabularies: List<Vocabulary> = api.findExamVocabularies()
     private val confirm = createSubmitConfirmDialog()
 
     init {
@@ -38,11 +36,12 @@ class ExamDialog(
         val form = FormLayout()
         form.addClassName("px-l")
         form.setSizeFull()
-        data.forEach {
+
+        vocabularies.forEach {
             val word = TextField(it.meaning + " " + it.partOfSpeech)
             word.setId(it.id)
             form.add(word)
-            words.add(word)
+            fields.add(word)
         }
         form.setResponsiveSteps(
             FormLayout.ResponsiveStep("0", 1),
@@ -54,11 +53,11 @@ class ExamDialog(
     private fun addFooterActions() {
         val exitBtn = Button("Exit", Icon(VaadinIcon.EXIT)) { close() }
         val submitBtn = Button("Submit", Icon(VaadinIcon.CHECK)) {
-            val filled = words.filter { it.value != null && it.value.trim() != "" }
+            val filled = fields.filter { it.value != null && it.value.trim() != "" }
                 .associate { it.id.get() to it.value }
-            confirm.setText("${filled.size}/${data.size} filled")
+            confirm.setText("Status: [ ${filled.size}/${vocabularies.size} ] filled")
             confirm.addConfirmListener {
-                api.checkVocabulary(filled)
+                api.checkExamVocabularies(filled)
                 close()
             }
             confirm.open()

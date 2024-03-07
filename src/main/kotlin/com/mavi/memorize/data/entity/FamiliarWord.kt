@@ -17,4 +17,9 @@ class FamiliarWord {
 
     @Column(name = "created_at")
     lateinit var createdAt: Instant
+
+    var round1: Instant? = null
+    var round2: Instant? = null
+    var round3: Instant? = null
+    var round4: Instant? = null
 }
