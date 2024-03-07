@@ -18,6 +18,7 @@ interface VocabularyRepository : JpaRepository<Vocabulary, String> {
     ): Page<Vocabulary>
 
     fun findAllByDelIsFalseAndStudyIsFalseAndIdNotIn(id: List<String>, pageable: Pageable): Page<Vocabulary>
+    fun findAllByDelIsFalseAndStudyIsFalse(pageable: Pageable): Page<Vocabulary>
     fun findAllByIdInAndDelIsFalse(id: List<String>, pageable: Pageable): Page<Vocabulary>
     fun findAllByIdIn(id: List<String>): List<Vocabulary>
 

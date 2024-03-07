@@ -5,8 +5,10 @@ import com.mavi.memorize.data.entity.Vocabulary
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
+import java.util.*
 
 interface VocabulariesApi {
+    fun findById(id: String): Optional<Vocabulary>
     fun addVocabulary(request: AddVocabularyRequest): Vocabulary
     fun findByPage(word: String?, study: Boolean?, pageRequest: PageRequest): Page<Vocabulary>
     fun removeVocabularyById(id: String)

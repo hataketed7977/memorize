@@ -23,6 +23,7 @@ class IncorrectWordsApiImpl(
                 entity.id = UUID.randomUUID().toString()
                 entity.vocabularyId = vocabularyId
                 entity.createdAt = Instant.now()
+                entity.updatedAt = Instant.now()
                 entity.count = 0
                 incorrectWordRepository.saveAndFlush(entity)
             }

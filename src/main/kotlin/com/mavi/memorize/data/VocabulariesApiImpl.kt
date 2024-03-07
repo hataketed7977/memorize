@@ -25,6 +25,10 @@ class VocabulariesApiImpl(
         private val familiarWordsReviewCycleDays = listOf<Long>(2, 4, 7, 20)
     }
 
+    override fun findById(id: String): Optional<Vocabulary> {
+        return vocabularyRepository.findById(id)
+    }
+
     override fun addVocabulary(request: AddVocabularyRequest): Vocabulary {
         val entity = Vocabulary()
         entity.id = UUID.randomUUID().toString()
