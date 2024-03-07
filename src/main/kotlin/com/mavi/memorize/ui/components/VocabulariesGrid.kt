@@ -15,17 +15,17 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.select.Select
 import com.vaadin.flow.data.binder.Binder
 import com.vaadin.flow.data.provider.Query
-import java.util.stream.Stream
 
 
 class VocabulariesGrid(
     private val api: VocabulariesApi,
     isReadMode: Boolean,
-    private val fetchData: (query: Query<Vocabulary, *>) -> Stream<Vocabulary>
+    private val fetchData: (query: Query<Vocabulary, *>) -> List<Vocabulary>
 ) : Div() {
     private val grid = Grid(Vocabulary::class.java, false)
     private val binder: Binder<Vocabulary> = Binder(Vocabulary::class.java)
     private val deleteConfirmDialog = createDeleteConfirmDialog()
+    private val items = mutableListOf<Vocabulary>()
 
     init {
         setSizeFull()
@@ -52,7 +52,11 @@ class VocabulariesGrid(
 
         if (!isReadMode) addOperationColumns()
         grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT)
-        grid.setItems { fetchData(it) }
+        grid.setItems {
+            this.items.clear()
+            this.items.addAll(fetchData(it))
+            this.items.stream()
+        }
         grid.addSortListener { refreshGrid() }
         return grid
     }
@@ -135,4 +139,6 @@ class VocabulariesGrid(
     fun refreshGrid() {
         grid.dataProvider.refreshAll()
     }
+
+    fun getItems() = this.items
 }

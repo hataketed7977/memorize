@@ -5,6 +5,7 @@ import com.mavi.memorize.api.IncorrectWordsApi
 import com.mavi.memorize.api.UnfamiliarWordsApi
 import com.mavi.memorize.api.VocabulariesApi
 import com.mavi.memorize.data.entity.Vocabulary
+import com.mavi.memorize.ui.components.ExamDialog
 import com.mavi.memorize.ui.components.VocabulariesGrid
 import com.mavi.memorize.ui.helper.Badge
 import com.mavi.memorize.ui.helper.intField
@@ -24,7 +25,6 @@ import com.vaadin.flow.data.provider.Query
 import com.vaadin.flow.router.Route
 import com.vaadin.flow.spring.data.VaadinSpringDataHelpers
 import org.springframework.data.domain.Sort
-import java.util.stream.Stream
 
 
 @Route(value = "memorize", layout = MainView::class)
@@ -37,6 +37,7 @@ class MemorizeView(
 ) : VerticalLayout() {
     private val grid = VocabulariesGrid(vocabulariesApi, true) { fetchData(it) }
     private val taskDialog = createTaskDialog()
+
     private val totalCount = readOnlyTextField("Total", Badge.DEFAULT)
     private val studyCount = readOnlyTextField("Study", Badge.SUCCESS)
     private val notStudyCount = readOnlyTextField("Not Study", Badge.CONTRAST)
@@ -58,7 +59,8 @@ class MemorizeView(
             taskDialog.open()
         }
         val startBtn = Button("Start Test") {
-            //TODO
+            val examDialog = ExamDialog(grid.getItems())
+            examDialog.open()
         }
         startBtn.addThemeVariants(ButtonVariant.LUMO_PRIMARY)
         val container = HorizontalLayout(refreshBtn, createBtn, startBtn)
@@ -102,11 +104,11 @@ class MemorizeView(
         return dialog
     }
 
-    private fun fetchData(query: Query<Vocabulary, *>): Stream<Vocabulary> {
-        val pageable = VaadinSpringDataHelpers.toSpringPageRequest(query)
+    private fun fetchData(it: Query<Vocabulary, *>): List<Vocabulary> {
+        val pageable = VaadinSpringDataHelpers.toSpringPageRequest(it)
         pageable.withSort(Sort.by(Sort.Order.desc("word")))
         val ids = unfamiliarWordsApi.findAll().map { it.vocabularyId }
-        return vocabulariesApi.findAllByIds(ids, pageable).stream()
+        return vocabulariesApi.findAllByIds(ids, pageable).content
     }
 
     private fun refreshGrid() {

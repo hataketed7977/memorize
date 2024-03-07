@@ -18,7 +18,6 @@ import com.vaadin.flow.router.Route
 import com.vaadin.flow.router.RouteAlias
 import com.vaadin.flow.spring.data.VaadinSpringDataHelpers
 import org.vaadin.lineawesome.LineAwesomeIcon
-import java.util.stream.Stream
 
 
 @Route(value = "vocabularies", layout = MainView::class)
@@ -53,7 +52,7 @@ class VocabulariesView(
         grid.refreshGrid()
     }
 
-    private fun fetchData(query: Query<Vocabulary, *>): Stream<Vocabulary> {
+    private fun fetchData(query: Query<Vocabulary, *>): List<Vocabulary> {
         if (query.sortOrders.isEmpty())
             query.sortOrders.add(QuerySortOrder("word", SortDirection.ASCENDING))
 
@@ -61,6 +60,6 @@ class VocabulariesView(
             word = filter.wordValue(),
             study = filter.studyValue(),
             pageRequest = VaadinSpringDataHelpers.toSpringPageRequest(query)
-        ).stream()
+        ).content
     }
 }
