@@ -36,4 +36,8 @@ class UnfamiliarWordsApiImpl(
     override fun findAll(): List<UnfamiliarWord> {
         return unfamiliarWordRepository.findAll()
     }
+
+    override fun deleteByVocabularyId(id: String) {
+        unfamiliarWordRepository.deleteByVocabularyId(id)
+    }
 }

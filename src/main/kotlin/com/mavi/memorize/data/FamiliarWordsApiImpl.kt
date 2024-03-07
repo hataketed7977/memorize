@@ -22,4 +22,8 @@ class FamiliarWordsApiImpl(
         entity.createdAt = Instant.now()
         return familiarWordRepository.saveAndFlush(entity)
     }
+
+    override fun deleteByVocabularyId(id: String) {
+        familiarWordRepository.deleteByVocabularyId(id)
+    }
 }

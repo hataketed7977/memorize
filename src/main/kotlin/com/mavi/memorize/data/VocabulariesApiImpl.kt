@@ -1,14 +1,8 @@
 package com.mavi.memorize.data
 
-import com.mavi.memorize.api.All
-import com.mavi.memorize.api.NotStudy
-import com.mavi.memorize.api.Study
-import com.mavi.memorize.api.VocabulariesApi
+import com.mavi.memorize.api.*
 import com.mavi.memorize.api.request.AddVocabularyRequest
 import com.mavi.memorize.data.entity.Vocabulary
-import com.mavi.memorize.data.repository.FamiliarWordRepository
-import com.mavi.memorize.data.repository.IncorrectWordRepository
-import com.mavi.memorize.data.repository.UnfamiliarWordRepository
 import com.mavi.memorize.data.repository.VocabularyRepository
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
@@ -22,9 +16,9 @@ import java.util.*
 @Transactional
 class VocabulariesApiImpl(
     private val vocabularyRepository: VocabularyRepository,
-    private val familiarWordRepository: FamiliarWordRepository,
-    private val unfamiliarWordRepository: UnfamiliarWordRepository,
-    private val incorrectWordRepository: IncorrectWordRepository,
+    private val familiarWordsApi: FamiliarWordsApi,
+    private val unfamiliarWordsApi: UnfamiliarWordsApi,
+    private val incorrectWordsApi: IncorrectWordsApi
 ) : VocabulariesApi {
     override fun addVocabulary(request: AddVocabularyRequest): Vocabulary {
         val entity = Vocabulary()
@@ -45,9 +39,9 @@ class VocabulariesApiImpl(
     }
 
     override fun removeVocabularyById(id: String) {
-        familiarWordRepository.deleteByVocabularyId(id)
-        unfamiliarWordRepository.deleteByVocabularyId(id)
-        incorrectWordRepository.deleteByVocabularyId(id)
+        familiarWordsApi.deleteByVocabularyId(id)
+        unfamiliarWordsApi.deleteByVocabularyId(id)
+        incorrectWordsApi.deleteByVocabularyId(id)
         vocabularyRepository.deleteById(id)
     }
 
@@ -65,5 +59,23 @@ class VocabulariesApiImpl(
 
     override fun findAllByIds(ids: List<String>, pageable: Pageable): Page<Vocabulary> {
         return vocabularyRepository.findAllByIdInAndDelIsFalse(ids, pageable)
+    }
+
+    override fun checkVocabulary(filled: Map<String, String>) {
+        val ids = filled.map { it.key }.toList()
+        val vocabularies = vocabularyRepository.findAllByIdIn(ids)
+        vocabularies.forEach {
+            val word = filled[it.id]
+            if (word != null) {
+                it.study = true
+                if (it.word.lowercase() == word.lowercase()) {
+                    familiarWordsApi.addFamiliarWord(it.id)
+                } else {
+                    incorrectWordsApi.addIncorrectWord(it.id)
+                }
+                unfamiliarWordsApi.deleteByVocabularyId(it.id)
+                updateVocabulary(it)
+            }
+        }
     }
 }

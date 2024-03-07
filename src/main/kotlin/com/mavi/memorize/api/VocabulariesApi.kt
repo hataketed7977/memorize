@@ -13,6 +13,7 @@ interface VocabulariesApi {
     fun updateVocabulary(item: Vocabulary): Vocabulary
     fun count(): Triple<All, Study, NotStudy>
     fun findAllByIds(ids: List<String>, pageable: Pageable): Page<Vocabulary>
+    fun checkVocabulary(filled: Map<String, String>)
 }
 
 typealias All = Long

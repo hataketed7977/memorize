@@ -23,12 +23,15 @@ class IncorrectWordsApiImpl(
                 entity.id = UUID.randomUUID().toString()
                 entity.vocabularyId = vocabularyId
                 entity.createdAt = Instant.now()
-                entity.updatedAt = Instant.now()
-                entity.count
+                entity.count = 0
                 incorrectWordRepository.saveAndFlush(entity)
             }
         word.count += 1
         word.updatedAt = Instant.now()
         return incorrectWordRepository.saveAndFlush(word)
+    }
+
+    override fun deleteByVocabularyId(id: String) {
+        incorrectWordRepository.deleteByVocabularyId(id)
     }
 }

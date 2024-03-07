@@ -1,5 +1,6 @@
 package com.mavi.memorize.ui.components
 
+import com.mavi.memorize.api.VocabulariesApi
 import com.mavi.memorize.data.entity.Vocabulary
 import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.button.ButtonVariant
@@ -12,7 +13,10 @@ import com.vaadin.flow.component.icon.VaadinIcon
 import com.vaadin.flow.component.textfield.TextField
 
 
-class ExamDialog(private val data: List<Vocabulary>) : Dialog() {
+class ExamDialog(
+    private val data: List<Vocabulary>,
+    private val api: VocabulariesApi
+) : Dialog() {
     private val words = mutableListOf<TextField>()
     private val confirm = createSubmitConfirmDialog()
 
@@ -35,12 +39,10 @@ class ExamDialog(private val data: List<Vocabulary>) : Dialog() {
         form.addClassName("px-l")
         form.setSizeFull()
         data.forEach {
-            for (i in 1..100) {
-                val word = TextField(it.meaning + " " + it.partOfSpeech)
-                word.setId(it.id)
-                words.add(word)
-                form.add(word)
-            }
+            val word = TextField(it.meaning + " " + it.partOfSpeech)
+            word.setId(it.id)
+            form.add(word)
+            words.add(word)
         }
         form.setResponsiveSteps(
             FormLayout.ResponsiveStep("0", 1),
@@ -56,6 +58,7 @@ class ExamDialog(private val data: List<Vocabulary>) : Dialog() {
                 .associate { it.id.get() to it.value }
             confirm.setText("${filled.size}/${data.size} filled")
             confirm.addConfirmListener {
+                api.checkVocabulary(filled)
                 close()
             }
             confirm.open()
