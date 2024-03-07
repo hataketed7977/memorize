@@ -26,7 +26,7 @@ class VocabulariesApiImpl(
     }
 
     override fun findById(id: String): Optional<Vocabulary> {
-        return vocabularyRepository.findById(id)
+        return vocabularyRepository.findByIdAndDelIsFalse(id)
     }
 
     override fun addVocabulary(request: AddVocabularyRequest): Vocabulary {
@@ -48,10 +48,13 @@ class VocabulariesApiImpl(
     }
 
     override fun removeVocabularyById(id: String) {
-        familiarWordsApi.deleteByVocabularyId(id)
-        unfamiliarWordsApi.deleteByVocabularyId(id)
-        incorrectWordsApi.deleteByVocabularyId(id)
-        vocabularyRepository.deleteById(id)
+        findById(id).ifPresent {
+            it.del = true
+            updateVocabulary(it)
+            familiarWordsApi.deleteByVocabularyId(id)
+            unfamiliarWordsApi.deleteByVocabularyId(id)
+            incorrectWordsApi.deleteByVocabularyId(id)
+        }
     }
 
     override fun updateVocabulary(item: Vocabulary): Vocabulary {

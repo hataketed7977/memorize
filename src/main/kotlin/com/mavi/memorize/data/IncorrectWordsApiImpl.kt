@@ -46,4 +46,8 @@ class IncorrectWordsApiImpl(
             incorrectWordRepository.saveAndFlush(it)
         }
     }
+
+    override fun findByVocabularyId(vocabularyId: String): Optional<IncorrectWord> {
+        return incorrectWordRepository.findByVocabularyId(vocabularyId)
+    }
 }

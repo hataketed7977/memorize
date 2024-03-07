@@ -1,6 +1,11 @@
-package com.mavi.memorize.cases
+package com.mavi.memorize.apis
 
+import com.mavi.memorize.DBTest
+import org.junit.jupiter.api.Test
+
+@DBTest
 class ExamBuildTest {
+    @Test
     fun `should test unfamiliar words`() {
 
     }

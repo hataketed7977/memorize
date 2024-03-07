@@ -1,4 +1,4 @@
-package com.mavi.memorize.cases
+package com.mavi.memorize.apis
 
 class ExamSubmitTest {
     fun `should remove unfamiliar when filled`() {

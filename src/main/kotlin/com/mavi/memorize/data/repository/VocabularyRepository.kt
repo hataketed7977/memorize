@@ -7,9 +7,12 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
+import java.util.Optional
 
 @Repository
 interface VocabularyRepository : JpaRepository<Vocabulary, String> {
+    fun findByIdAndDelIsFalse(id: String): Optional<Vocabulary>
+
     @Query("SELECT v FROM Vocabulary v WHERE v.del = false and (:word is null or v.word LIKE %:word%) and (:study is null or v.study = :study)")
     fun findByPage(
         @Param("word") word: String?,

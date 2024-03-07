@@ -1,4 +1,4 @@
-package com.mavi.memorize.cases
+package com.mavi.memorize.apis
 
 import com.mavi.memorize.DBTest
 import com.mavi.memorize.api.FamiliarWordsApi

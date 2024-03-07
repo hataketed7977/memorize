@@ -38,4 +38,8 @@ class FamiliarWordsApiImpl(
             else -> familiarWordRepository.findAll()
         }
     }
+
+    override fun findByVocabularyId(vocabularyId: String): Optional<FamiliarWord> {
+        return familiarWordRepository.findByVocabularyId(vocabularyId)
+    }
 }
