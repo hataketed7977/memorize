@@ -46,3 +46,28 @@ fun FamiliarWordsApi.initFamiliarWord(vocabularyId: String, beforeDays: Long, ro
     if (round >= 4) familiarWord.round4 = Instant.now()
     update(familiarWord)
 }
+
+fun FamiliarWordsApi.initFullFamiliarWords(vocabularyId: List<String>) {
+    //Review cycle: 2,4,7,20
+    //Not Review
+    initFamiliarWord(vocabularyId[0], 1)
+    initFamiliarWord(vocabularyId[1], 2)
+    initFamiliarWord(vocabularyId[2], 3)
+    //Review 1 round
+    initFamiliarWord(vocabularyId[3], 3, 1)
+    initFamiliarWord(vocabularyId[4], 4, 1)
+    initFamiliarWord(vocabularyId[5], 5, 1)
+    //Review 2 round
+    initFamiliarWord(vocabularyId[6], 5, 2)
+    initFamiliarWord(vocabularyId[7], 7, 2)
+    initFamiliarWord(vocabularyId[8], 15, 2)
+    //Review 3 round
+    initFamiliarWord(vocabularyId[9], 15, 3)
+    initFamiliarWord(vocabularyId[10], 20, 3)
+    initFamiliarWord(vocabularyId[11], 22, 3)
+    //Review 4 round
+    initFamiliarWord(vocabularyId[12], 3, 4)
+    initFamiliarWord(vocabularyId[13], 5, 4)
+    initFamiliarWord(vocabularyId[14], 8, 4)
+    initFamiliarWord(vocabularyId[15], 25, 4)
+}

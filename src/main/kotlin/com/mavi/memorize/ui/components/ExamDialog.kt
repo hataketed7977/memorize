@@ -1,6 +1,8 @@
 package com.mavi.memorize.ui.components
 
+import com.mavi.memorize.api.FilledValue
 import com.mavi.memorize.api.VocabulariesApi
+import com.mavi.memorize.api.VocabularyId
 import com.mavi.memorize.data.entity.Vocabulary
 import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.button.ButtonVariant
@@ -53,7 +55,7 @@ class ExamDialog(private val api: VocabulariesApi) : Dialog() {
     private fun addFooterActions() {
         val exitBtn = Button("Exit", Icon(VaadinIcon.EXIT)) { close() }
         val submitBtn = Button("Submit", Icon(VaadinIcon.CHECK)) {
-            val filled = fields.filter { it.value != null && it.value.trim() != "" }
+            val filled: Map<VocabularyId, FilledValue> = fields.filter { it.value != null && it.value.trim() != "" }
                 .associate { it.id.get() to it.value }
             confirm.setText("Status: [ ${filled.size}/${vocabularies.size} ] filled")
             confirm.addConfirmListener {

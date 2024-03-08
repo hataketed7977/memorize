@@ -5,15 +5,13 @@ import com.mavi.memorize.api.FamiliarWordsApi
 import com.mavi.memorize.api.IncorrectWordsApi
 import com.mavi.memorize.api.UnfamiliarWordsApi
 import com.mavi.memorize.api.VocabulariesApi
-import com.mavi.memorize.helper.initFamiliarWord
+import com.mavi.memorize.helper.initFullFamiliarWords
 import com.mavi.memorize.helper.initVocabulary
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
-import java.time.Instant
-import java.time.temporal.ChronoUnit
 
 @DBTest
 class ExamBuildTest {
@@ -60,28 +58,7 @@ class ExamBuildTest {
     fun `should test familiar words by rounds`() {
         val ids = vocabulariesApi.findByPage(null, null, PageRequest.ofSize(100))
             .map { it.id }.content
-        //Review cycle: 2,4,7,20
-        //Not Review
-        familiarWordsApi.initFamiliarWord(ids[0], 1)
-        familiarWordsApi.initFamiliarWord(ids[1], 2)
-        familiarWordsApi.initFamiliarWord(ids[2], 3)
-        //Review 1 round
-        familiarWordsApi.initFamiliarWord(ids[3], 3, 1)
-        familiarWordsApi.initFamiliarWord(ids[4], 4, 1)
-        familiarWordsApi.initFamiliarWord(ids[5], 5, 1)
-        //Review 2 round
-        familiarWordsApi.initFamiliarWord(ids[6], 5, 2)
-        familiarWordsApi.initFamiliarWord(ids[7], 7, 2)
-        familiarWordsApi.initFamiliarWord(ids[8], 15, 2)
-        //Review 3 round
-        familiarWordsApi.initFamiliarWord(ids[9], 15, 3)
-        familiarWordsApi.initFamiliarWord(ids[10], 20, 3)
-        familiarWordsApi.initFamiliarWord(ids[11], 22, 3)
-        //Review 4 round
-        familiarWordsApi.initFamiliarWord(ids[12], 3, 4)
-        familiarWordsApi.initFamiliarWord(ids[13], 5, 4)
-        familiarWordsApi.initFamiliarWord(ids[14], 8, 4)
-        familiarWordsApi.initFamiliarWord(ids[15], 25, 4)
+        familiarWordsApi.initFullFamiliarWords(ids)
 
         val vocabularies = vocabulariesApi.findExamVocabularies().map { it.id }
 
@@ -93,4 +70,6 @@ class ExamBuildTest {
             ids[10], ids[11],
         )
     }
+
+
 }

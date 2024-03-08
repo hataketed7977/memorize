@@ -16,9 +16,12 @@ interface VocabulariesApi {
     fun count(): Triple<All, Study, NotStudy>
     fun findAllByIds(ids: List<String>, pageable: Pageable): Page<Vocabulary>
     fun findExamVocabularies(): List<Vocabulary>
-    fun checkExamVocabularies(filled: Map<String, String>)
+    fun checkExamVocabularies(filled: Map<VocabularyId, FilledValue>)
 }
 
 typealias All = Long
 typealias Study = Long
 typealias NotStudy = Long
+
+typealias VocabularyId = String
+typealias FilledValue = String
