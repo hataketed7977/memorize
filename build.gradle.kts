@@ -24,6 +24,9 @@ configurations {
 
 repositories {
     mavenCentral()
+    maven {
+        url = uri("https://maven.vaadin.com/vaadin-addons")
+    }
 }
 
 extra["vaadinVersion"] = "24.3.6"
@@ -41,6 +44,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-hateoas")
     implementation("com.vaadin:vaadin-spring-boot-starter")
     implementation("org.parttio:line-awesome:${property("lineAwesomeVersion")}")
+
     /*data*/
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.flywaydb:flyway-core")

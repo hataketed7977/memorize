@@ -39,6 +39,7 @@ class MainView : AppLayout() {
         val nav = SideNav()
         nav.addItem(SideNavItem("Vocabularies", VocabulariesView::class.java, LineAwesomeIcon.BOOK_SOLID.create()))
         nav.addItem(SideNavItem("Memorize", MemorizeView::class.java, LineAwesomeIcon.TASKS_SOLID.create()))
+        nav.addItem(SideNavItem("Statistics", StatisticsView::class.java, LineAwesomeIcon.CHART_BAR.create()))
         return nav
     }
 
