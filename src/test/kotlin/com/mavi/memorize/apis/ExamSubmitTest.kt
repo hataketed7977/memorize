@@ -8,6 +8,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Pageable
 
 @DBTest
 class ExamSubmitTest {
@@ -58,23 +59,62 @@ class ExamSubmitTest {
         assertThat(unfamiliarWordsApi.count()).isEqualTo(0)
     }
 
+    @Test
     fun `should mark vocabulary as study when filled`() {
+        val rightFilled = vocabularies.subList(0, 10).associate { it.id to it.word }
+        val wrongFilled = vocabularies.subList(10, 20).associate { it.id to "anyway" }
+        vocabulariesApi.checkExamVocabularies(rightFilled + wrongFilled)
+
+        assertThat(vocabulariesApi.count().second).isEqualTo(23)
+        assertThat(vocabulariesApi.count().third).isEqualTo(0)
+        assertThat(vocabulariesApi.findAllByIds((rightFilled + wrongFilled).map { it.key }, Pageable.ofSize(50))
+            .map { it.study }.all { it }).isTrue()
 
     }
 
+    @Test
     fun `should add to familiar words when filled right`() {
+        val rightFilled = vocabularies.subList(0, 10).associate { it.id to it.word }
+        val wrongFilled = vocabularies.subList(10, 20).associate { it.id to "anyway" }
+        vocabulariesApi.checkExamVocabularies(rightFilled + wrongFilled)
 
+        val vocabularyIds = familiarWordsApi.findAllNotStartRounds().map { it.vocabularyId }
+        assertThat(vocabularyIds).containsAnyElementsOf(rightFilled.map { it.key })
+        assertThat(vocabularyIds).doesNotContainAnyElementsOf(wrongFilled.map { it.key })
     }
 
-    //round update
-
-    fun `should reduce incorrect word error count when filled right`() {
-
-    }
-
+    @Test
     fun `should add to incorrect words when filled wrong`() {
+        val rightFilled = vocabularies.subList(0, 10).associate { it.id to it.word }
+        val wrongFilled = vocabularies.subList(10, 20).associate { it.id to "anyway" }
+        vocabulariesApi.checkExamVocabularies(rightFilled + wrongFilled)
 
+        val vocabularyIds = incorrectWordsApi.findAllByCountGreaterThanZero().map { it.vocabularyId }
+        assertThat(vocabularyIds).containsAnyElementsOf(wrongFilled.map { it.key })
+        assertThat(vocabularyIds).doesNotContainAnyElementsOf(rightFilled.map { it.key })
     }
 
+    @Test
+    fun `should reduce incorrect word error count when filled right`() {
+        val rightFilled = vocabularies.subList(0, 10).associate { it.id to it.word }
+        val wrongFilled = vocabularies.subList(10, 20).associate { it.id to "anyway" }
+        val incorrectWords = rightFilled.map { it.key }.subList(0, 5).map {
+            incorrectWordsApi.addIncorrectWord(it)
+        }
+        incorrectWords.forEach {
+            assertThat(incorrectWordsApi.findByVocabularyId(it.vocabularyId).get().count).isOne()
+        }
+
+        vocabulariesApi.checkExamVocabularies(rightFilled + wrongFilled)
+
+        val vocabularyIds = incorrectWordsApi.findAllByCountGreaterThanZero().map { it.vocabularyId }
+        assertThat(vocabularyIds).containsAnyElementsOf(wrongFilled.map { it.key })
+        assertThat(vocabularyIds).doesNotContainAnyElementsOf(rightFilled.map { it.key })
+        incorrectWords.forEach {
+            assertThat(incorrectWordsApi.findByVocabularyId(it.vocabularyId).get().count).isZero()
+        }
+    }
+
+    //TODO round update
     //add exam record
 }
