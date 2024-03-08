@@ -26,5 +26,5 @@ class IncorrectVocabulary {
     @Column(name = "incorrect_updated_at")
     lateinit var incorrectUpdatedAt: Instant
 
-    fun displayUpdatedAt(): String = DateHelper.formatter.format(incorrectUpdatedAt)
+    fun displayUpdatedAt(): String = DateHelper.format(incorrectUpdatedAt)
 }

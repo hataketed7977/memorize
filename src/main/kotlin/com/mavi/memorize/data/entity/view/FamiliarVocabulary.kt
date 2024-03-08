@@ -28,5 +28,9 @@ class FamiliarVocabulary {
     var round3: Instant? = null
     var round4: Instant? = null
 
-    fun displayCreatedAt(): String = DateHelper.formatter.format(familiarCreatedAt)
+    fun displayCreatedAt(): String = DateHelper.format(familiarCreatedAt)
+    fun displayRound1(): String = DateHelper.format(round1)
+    fun displayRound2(): String = DateHelper.format(round2)
+    fun displayRound3(): String = DateHelper.format(round3)
+    fun displayRound4(): String = DateHelper.format(round4)
 }

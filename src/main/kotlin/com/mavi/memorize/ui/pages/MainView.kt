@@ -41,6 +41,7 @@ class MainView : AppLayout() {
         nav.addItem(SideNavItem("Memorize", MemorizeView::class.java, LineAwesomeIcon.TASKS_SOLID.create()))
         nav.addItem(SideNavItem("Statistics", StatisticsView::class.java, LineAwesomeIcon.CHART_BAR.create()))
         nav.addItem(SideNavItem("Incorrect Words", IncorrectWordsView::class.java, LineAwesomeIcon.BUG_SOLID.create()))
+        nav.addItem(SideNavItem("Familiar Words", FamiliarWordsView::class.java, LineAwesomeIcon.CHECK_SOLID.create()))
         return nav
     }
 

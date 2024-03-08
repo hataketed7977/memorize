@@ -28,6 +28,6 @@ class Vocabulary {
     @Column(name = "created_at")
     lateinit var createdAt: Instant
 
-    fun displayCreatedAt(): String = DateHelper.formatter.format(createdAt)
+    fun displayCreatedAt(): String = DateHelper.format(createdAt)
     fun displayStudy(): String = if (study) "Yes" else "No"
 }
