@@ -6,9 +6,7 @@ import com.mavi.memorize.api.IncorrectWordsApi
 import com.mavi.memorize.api.UnfamiliarWordsApi
 import com.mavi.memorize.api.VocabulariesApi
 import com.mavi.memorize.data.entity.Vocabulary
-import com.mavi.memorize.helper.addDeletedVocabulary
-import com.mavi.memorize.helper.addStudiedVocabulary
-import com.mavi.memorize.helper.addVocabularyRequest
+import com.mavi.memorize.helper.initVocabulary
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -26,6 +24,8 @@ class WordsCountsTest {
 
     @Autowired
     private lateinit var incorrectWordsApi: IncorrectWordsApi
+
+    private fun initVocabulary(): List<Vocabulary> = vocabulariesApi.initVocabulary(5, 3, 2)
 
     @Test
     fun `should count vocabularies when data is empty`() {
@@ -96,21 +96,5 @@ class WordsCountsTest {
 
         val count = incorrectWordsApi.count()
         assertThat(count).isEqualTo(8)
-    }
-
-    private fun initVocabulary(): List<Vocabulary> {
-        val vocabularies = mutableListOf<Vocabulary>()
-        repeat(5) {
-            vocabularies.add(vocabulariesApi.addVocabulary(addVocabularyRequest()))
-        }
-
-        repeat(3) {
-            vocabularies.add(vocabulariesApi.addStudiedVocabulary(addVocabularyRequest()))
-        }
-
-        repeat(2) {
-            vocabularies.add(vocabulariesApi.addDeletedVocabulary(addVocabularyRequest()))
-        }
-        return vocabularies
     }
 }

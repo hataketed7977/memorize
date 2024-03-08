@@ -10,7 +10,6 @@ import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 import java.time.Instant
-import java.time.temporal.ChronoUnit
 import java.util.*
 
 @Component
@@ -76,8 +75,21 @@ class VocabulariesApiImpl(
     override fun findExamVocabularies(): List<Vocabulary> {
         val unfamiliarIds = unfamiliarWordsApi.findAll().map { it.vocabularyId }
         val incorrectIds = incorrectWordsApi.findAllByCountGreaterThanZero().map { it.vocabularyId }
+
+
+        val groups = familiarWordsApi.findAllNotStartRounds().groupBy {
+            when {
+                it.round1 == null -> 0
+                it.round2 == null -> 1
+                it.round3 == null -> 2
+                else -> 3
+            }
+        }
+
         val familiarIds = familiarWordsReviewCycleDays.mapIndexed { index, day ->
-            familiarWordsApi.findByRound(index + 1).filter { hasPassedDay(it.createdAt, day) }
+            groups.getOrDefault(index, emptyList()).filter {
+                (getDays(Instant.now()) - getDays(it.createdAt)) >= day
+            }
         }.flatten().map { it.vocabularyId }
 
         return findAllByIds(
@@ -86,9 +98,10 @@ class VocabulariesApiImpl(
         ).content
     }
 
-    private fun hasPassedDay(instant: Instant, day: Long) =
-        instant.plus(day, ChronoUnit.DAYS).truncatedTo(ChronoUnit.DAYS)
-            .isBefore(Instant.now().truncatedTo(ChronoUnit.DAYS))
+    private fun getDays(instant: Instant): Long {
+        val millisecondsPerDay = 24 * 60 * 60 * 1000L
+        return instant.toEpochMilli() / millisecondsPerDay
+    }
 
     override fun checkExamVocabularies(filled: Map<String, String>) {
         val ids = filled.map { it.key }.toList()
