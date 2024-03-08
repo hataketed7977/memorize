@@ -1,5 +1,6 @@
 package com.mavi.memorize.ui.pages
 
+import com.mavi.memorize.ui.components.CalendarGrid
 import com.vaadin.flow.component.dependency.Uses
 import com.vaadin.flow.component.icon.Icon
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
@@ -12,5 +13,6 @@ class StatisticsView : VerticalLayout() {
 
     init {
         setSizeFull()
+        add(CalendarGrid())
     }
 }
