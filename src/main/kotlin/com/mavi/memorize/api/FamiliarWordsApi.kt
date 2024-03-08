@@ -10,4 +10,5 @@ interface FamiliarWordsApi {
     fun findAllNotStartRounds(): List<FamiliarWord>
     fun findByVocabularyId(vocabularyId: String): Optional<FamiliarWord>
     fun update(familiarWord: FamiliarWord): FamiliarWord
+    fun updateRoundByVocabularyId(vocabularyId: String)
 }

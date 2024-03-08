@@ -16,7 +16,10 @@ class FamiliarWordsApiImpl(
     override fun count(): Long = familiarWordRepository.count()
 
     override fun addFamiliarWord(vocabularyId: String): FamiliarWord {
-        return familiarWordRepository.findByVocabularyId(vocabularyId).orElseGet {
+        val familiarWord = familiarWordRepository.findByVocabularyId(vocabularyId)
+        return if (familiarWord.isPresent) {
+            updateRound(familiarWord.get())
+        } else {
             val entity = FamiliarWord()
             entity.id = UUID.randomUUID().toString()
             entity.vocabularyId = vocabularyId
@@ -39,5 +42,19 @@ class FamiliarWordsApiImpl(
 
     override fun update(familiarWord: FamiliarWord): FamiliarWord {
         return familiarWordRepository.saveAndFlush(familiarWord)
+    }
+
+    override fun updateRoundByVocabularyId(vocabularyId: String) {
+        return familiarWordRepository.findByVocabularyId(vocabularyId).ifPresent { updateRound(it) }
+    }
+
+    private fun updateRound(entity: FamiliarWord): FamiliarWord {
+        when {
+            entity.round1 == null -> entity.round1 = Instant.now()
+            entity.round2 == null -> entity.round2 = Instant.now()
+            entity.round3 == null -> entity.round3 = Instant.now()
+            entity.round4 == null -> entity.round4 = Instant.now()
+        }
+        return familiarWordRepository.saveAndFlush(entity)
     }
 }

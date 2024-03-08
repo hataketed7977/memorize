@@ -113,6 +113,7 @@ class VocabulariesApiImpl(
                     familiarWordsApi.addFamiliarWord(it.id)
                     incorrectWordsApi.reduceCountByVocabularyId(it.id)
                 } else {
+                    familiarWordsApi.updateRoundByVocabularyId(it.id)
                     incorrectWordsApi.addIncorrectWord(it.id)
                 }
                 unfamiliarWordsApi.deleteByVocabularyId(it.id)

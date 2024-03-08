@@ -21,6 +21,14 @@ fun VocabulariesApi.addDeletedVocabulary(request: AddVocabularyRequest): Vocabul
     return vocabulary
 }
 
+fun VocabulariesApi.markAsStudy(vararg ids: String) {
+    ids.forEach {
+        val vocabulary = findById(it).get()
+        vocabulary.study = true
+        updateVocabulary(vocabulary)
+    }
+}
+
 fun VocabulariesApi.initVocabulary(notStudy: Int, study: Int = 0, del: Int = 0): List<Vocabulary> {
     val vocabularies = mutableListOf<Vocabulary>()
     repeat(notStudy) {
