@@ -1,4 +1,4 @@
-package com.mavi.memorize.data.entity
+package com.mavi.memorize.data.entity.view
 
 import com.mavi.memorize.data.helper.DateHelper
 import jakarta.persistence.Column
@@ -8,12 +8,11 @@ import jakarta.persistence.Table
 import java.time.Instant
 
 @Entity
-@Table(name = "t_vocabularies")
-class Vocabulary {
-
-
+@Table(name = "v_incorrect_vocabularies")
+class IncorrectVocabulary {
     @Id
     lateinit var id: String
+
     lateinit var word: String
     lateinit var meaning: String
     lateinit var pron: String
@@ -21,13 +20,11 @@ class Vocabulary {
     @Column(name = "part_of_speech")
     lateinit var partOfSpeech: String
 
-    var study: Boolean = false
-    var del: Boolean = false
-    var sentence: String? = null
+    @Column(name = "count")
+    var count: Int = 1
 
-    @Column(name = "created_at")
-    lateinit var createdAt: Instant
+    @Column(name = "incorrect_updated_at")
+    lateinit var incorrectUpdatedAt: Instant
 
-    fun displayCreatedAt(): String = DateHelper.formatter.format(createdAt)
-    fun displayStudy(): String = if (study) "Yes" else "No"
+    fun displayUpdatedAt(): String = DateHelper.formatter.format(incorrectUpdatedAt)
 }

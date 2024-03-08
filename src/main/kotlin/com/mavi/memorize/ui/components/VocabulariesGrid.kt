@@ -18,8 +18,8 @@ import com.vaadin.flow.data.provider.Query
 
 
 class VocabulariesGrid(
-    private val api: VocabulariesApi,
     isReadMode: Boolean,
+    private val api: VocabulariesApi? = null,
     private val fetchData: (query: Query<Vocabulary, *>) -> List<Vocabulary>
 ) : Div() {
     private val grid = Grid(Vocabulary::class.java, false)
@@ -87,7 +87,7 @@ class VocabulariesGrid(
         grid.editor.setBinder(binder)
         grid.editor.setBuffered(true)
         grid.editor.addSaveListener {
-            api.updateVocabulary(it.item)
+            api?.updateVocabulary(it.item as Vocabulary)
             refreshGrid()
         }
     }
@@ -125,7 +125,7 @@ class VocabulariesGrid(
         dialog.setHeader("Delete operation")
         dialog.setCancelable(true)
         dialog.addConfirmListener {
-            api.removeVocabularyById(dialog.id.get())
+            api?.removeVocabularyById(dialog.id.get())
             refreshGrid()
         }
         return dialog

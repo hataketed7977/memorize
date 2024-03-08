@@ -2,7 +2,11 @@ package com.mavi.memorize.data
 
 import com.mavi.memorize.api.FamiliarWordsApi
 import com.mavi.memorize.data.entity.FamiliarWord
+import com.mavi.memorize.data.entity.view.FamiliarVocabulary
 import com.mavi.memorize.data.repository.FamiliarWordRepository
+import com.mavi.memorize.data.repository.view.FamiliarVocabularyRepository
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 import java.time.Instant
@@ -11,7 +15,8 @@ import java.util.*
 @Component
 @Transactional
 class FamiliarWordsApiImpl(
-    private val familiarWordRepository: FamiliarWordRepository
+    private val familiarWordRepository: FamiliarWordRepository,
+    private val familiarVocabularyRepository: FamiliarVocabularyRepository
 ) : FamiliarWordsApi {
     override fun count(): Long = familiarWordRepository.count()
 
@@ -46,6 +51,10 @@ class FamiliarWordsApiImpl(
 
     override fun updateRoundByVocabularyId(vocabularyId: String) {
         return familiarWordRepository.findByVocabularyId(vocabularyId).ifPresent { updateRound(it) }
+    }
+
+    override fun findFamiliarVocabularies(pageable: Pageable): Page<FamiliarVocabulary> {
+        return familiarVocabularyRepository.findAll(pageable)
     }
 
     private fun updateRound(entity: FamiliarWord): FamiliarWord {

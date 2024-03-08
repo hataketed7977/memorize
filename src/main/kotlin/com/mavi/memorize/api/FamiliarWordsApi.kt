@@ -1,6 +1,9 @@
 package com.mavi.memorize.api
 
 import com.mavi.memorize.data.entity.FamiliarWord
+import com.mavi.memorize.data.entity.view.FamiliarVocabulary
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import java.util.*
 
 interface FamiliarWordsApi {
@@ -11,4 +14,5 @@ interface FamiliarWordsApi {
     fun findByVocabularyId(vocabularyId: String): Optional<FamiliarWord>
     fun update(familiarWord: FamiliarWord): FamiliarWord
     fun updateRoundByVocabularyId(vocabularyId: String)
+    fun findFamiliarVocabularies(pageable: Pageable): Page<FamiliarVocabulary>
 }

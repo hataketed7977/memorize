@@ -2,7 +2,11 @@ package com.mavi.memorize.data
 
 import com.mavi.memorize.api.IncorrectWordsApi
 import com.mavi.memorize.data.entity.IncorrectWord
+import com.mavi.memorize.data.entity.view.IncorrectVocabulary
 import com.mavi.memorize.data.repository.IncorrectWordRepository
+import com.mavi.memorize.data.repository.view.IncorrectVocabularyRepository
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 import java.time.Instant
@@ -12,7 +16,8 @@ import kotlin.jvm.optionals.getOrElse
 @Component
 @Transactional
 class IncorrectWordsApiImpl(
-    private val incorrectWordRepository: IncorrectWordRepository
+    private val incorrectWordRepository: IncorrectWordRepository,
+    private val incorrectVocabularyRepository: IncorrectVocabularyRepository
 ) : IncorrectWordsApi {
     override fun count(): Long = incorrectWordRepository.count()
     override fun addIncorrectWord(vocabularyId: String): IncorrectWord {
@@ -49,5 +54,9 @@ class IncorrectWordsApiImpl(
 
     override fun findByVocabularyId(vocabularyId: String): Optional<IncorrectWord> {
         return incorrectWordRepository.findByVocabularyId(vocabularyId)
+    }
+
+    override fun findIncorrectVocabularies(pageable: Pageable): Page<IncorrectVocabulary> {
+        return incorrectVocabularyRepository.findAllByCountGreaterThan(0, pageable)
     }
 }

@@ -35,7 +35,7 @@ class MemorizeView(
     private val familiarWordsApi: FamiliarWordsApi,
     private val incorrectWordsApi: IncorrectWordsApi
 ) : VerticalLayout() {
-    private val grid = VocabulariesGrid(vocabulariesApi, true) { fetchData(it) }
+    private val grid = VocabulariesGrid(true) { fetchData(it) }
     private val taskDialog = createTaskDialog()
 
     private val totalCount = readOnlyTextField("Total", Badge.DEFAULT)
@@ -60,6 +60,7 @@ class MemorizeView(
         }
         val startBtn = Button("Start Test") {
             val examDialog = ExamDialog(vocabulariesApi)
+            examDialog.addDialogCloseActionListener { refreshGrid() }
             examDialog.open()
         }
         startBtn.addThemeVariants(ButtonVariant.LUMO_PRIMARY)

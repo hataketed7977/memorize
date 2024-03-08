@@ -27,7 +27,7 @@ class VocabulariesView(
     private val api: VocabulariesApi
 ) : VerticalLayout() {
     private val filter = VocabulariesFilter { refreshGrid() }
-    private val grid: VocabulariesGrid = VocabulariesGrid(api, false) { fetchData(it) }
+    private val grid = VocabulariesGrid(false, api) { fetchData(it) }
     private val addVocabularyDialog = AddVocabularyDialog(api) { refreshGrid() }
 
     init {
