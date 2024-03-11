@@ -59,8 +59,7 @@ class MemorizeView(
             taskDialog.open()
         }
         val startBtn = Button("Start Test") {
-            val examDialog = ExamDialog(vocabulariesApi)
-            examDialog.addDialogCloseActionListener { refreshGrid() }
+            val examDialog = ExamDialog(vocabulariesApi) { refreshGrid() }
             examDialog.open()
         }
         startBtn.addThemeVariants(ButtonVariant.LUMO_PRIMARY)

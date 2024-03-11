@@ -2,7 +2,6 @@ package com.mavi.memorize.apis
 
 import com.mavi.memorize.DBTest
 import com.mavi.memorize.api.*
-import com.mavi.memorize.data.entity.FamiliarWord
 import com.mavi.memorize.data.entity.Vocabulary
 import com.mavi.memorize.helper.initFullFamiliarWords
 import com.mavi.memorize.helper.initVocabulary

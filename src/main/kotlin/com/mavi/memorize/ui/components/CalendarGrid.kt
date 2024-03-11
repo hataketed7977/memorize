@@ -48,6 +48,7 @@ class CalendarGrid(
     private var currentDate: LocalDate = LocalDate.now()
     private var month = H2(currentDate.month.name)
     private var year = H2(currentDate.year.toString())
+    private var dateClickListener: ((date: CalendarDate) -> Unit)? = null
 
     init {
         setWidthFull()
@@ -87,13 +88,13 @@ class CalendarGrid(
     }
 
     private fun configColumns() {
-        grid.addComponentColumn { displayCalendarDate(it.sun) }.centerHeader(H3("Sunday")).cellAlign()
         grid.addComponentColumn { displayCalendarDate(it.mon) }.centerHeader(H3("Monday")).cellAlign()
         grid.addComponentColumn { displayCalendarDate(it.tue) }.centerHeader(H3("Tuesday")).cellAlign()
         grid.addComponentColumn { displayCalendarDate(it.wed) }.centerHeader(H3("Wednesday")).cellAlign()
         grid.addComponentColumn { displayCalendarDate(it.thu) }.centerHeader(H3("Thursday")).cellAlign()
         grid.addComponentColumn { displayCalendarDate(it.fri) }.centerHeader(H3("Friday")).cellAlign()
         grid.addComponentColumn { displayCalendarDate(it.sat) }.centerHeader(H3("Saturday")).cellAlign()
+        grid.addComponentColumn { displayCalendarDate(it.sun) }.centerHeader(H3("Sunday")).cellAlign()
         grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT)
         grid.setItems { fetchData(it) }
         grid.setSelectionMode(Grid.SelectionMode.NONE)
@@ -128,6 +129,7 @@ class CalendarGrid(
                     DayOfWeek.SUNDAY -> calendarWeek.sun = calendarDate(curDay, memorizeRecords)
                     else -> Unit
                 }
+                if (curDay == lastDay) return@repeat
                 curDay = curDay.plusDays(1)
             }
             data.add(calendarWeek)
@@ -159,9 +161,7 @@ class CalendarGrid(
                 btn.addThemeVariants(ButtonVariant.LUMO_PRIMARY)
             }
 
-            btn.addClickListener {
-
-            }
+            btn.addClickListener { dateClickListener?.invoke(date) }
             btn
         } else Span()
     }
@@ -171,8 +171,22 @@ class CalendarGrid(
         month.text = currentDate.month.name
         year.text = currentDate.year.toString()
     }
+
+    fun addDateClickListener(click: (date: CalendarDate) -> Unit) {
+        dateClickListener = click
+    }
 }
 
-fun List<MemorizeRecord>.toLocalDateMap() = associate {
-    LocalDate.of(it.year, it.month, it.day) to it.words
+fun List<MemorizeRecord>.toLocalDateMap(): Map<LocalDate, List<String>> {
+    val map = mutableMapOf<LocalDate, List<String>>()
+    forEach {
+        val key = LocalDate.of(it.year, it.month, it.day)
+        val value = map[key]
+        if (value != null) {
+            map[key] = (value + it.words).distinct()
+        } else {
+            map[key] = it.words
+        }
+    }
+    return map
 }

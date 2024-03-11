@@ -15,7 +15,7 @@ import com.vaadin.flow.component.icon.VaadinIcon
 import com.vaadin.flow.component.textfield.TextField
 
 
-class ExamDialog(private val api: VocabulariesApi) : Dialog() {
+class ExamDialog(private val api: VocabulariesApi, private val onSearch: Runnable) : Dialog() {
     private val fields = mutableListOf<TextField>()
     private var vocabularies: List<Vocabulary> = api.findExamVocabularies()
     private val confirm = createSubmitConfirmDialog()
@@ -60,6 +60,7 @@ class ExamDialog(private val api: VocabulariesApi) : Dialog() {
             confirm.setText("Status: [ ${filled.size}/${vocabularies.size} ] filled")
             confirm.addConfirmListener {
                 api.checkExamVocabularies(filled)
+                onSearch.run()
                 close()
             }
             confirm.open()

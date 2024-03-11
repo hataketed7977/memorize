@@ -41,6 +41,20 @@ class CalendarGridTest {
         assertThat(dates[4].sun.dayOfMonth).isEqualTo(31)
     }
 
+    @Test
+    fun `should merge records when locale date is same`() {
+        val map = listOf(
+            memorizeRecord(listOf("test", "a")),
+            memorizeRecord(listOf("a"))
+        ).toLocalDateMap()
+
+        assertThat(map).isEqualTo(
+            mapOf(
+                LocalDate.of(2024, 3, 11) to listOf("test", "a")
+            )
+        )
+    }
+
     private fun fetchMemorizeRecords(year: Int, month: Int): List<MemorizeRecord> {
         val records = mutableListOf<MemorizeRecord>()
         repeat(20) {
