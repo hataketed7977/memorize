@@ -124,7 +124,7 @@ class VocabulariesApiImpl(
                 updateVocabulary(it)
             }
         if (memorizeRecords.isNotEmpty()) {
-            memorizeRecordsApi.recordMemorizeWords(memorizeRecords)
+            memorizeRecordsApi.recordMemorizeWords(memorizeRecords.distinct())
         }
     }
 }

@@ -41,10 +41,10 @@ data class CalendarDate(
 )
 
 class CalendarGrid(
+    private val todayDate: LocalDate = LocalDate.now(),
     private val fetchMemorizeRecords: (year: Int, month: Int) -> List<MemorizeRecord>
 ) : VerticalLayout() {
     private val grid = Grid(CalendarWeek::class.java, false)
-    private val todayDate: LocalDate = LocalDate.now()
     private var currentDate: LocalDate = LocalDate.now()
     private var month = H2(currentDate.month.name)
     private var year = H2(currentDate.year.toString())
@@ -101,20 +101,17 @@ class CalendarGrid(
 
     private fun fetchData(query: Query<CalendarWeek, *>): Stream<CalendarWeek> {
         VaadinSpringDataHelpers.toSpringPageRequest(query)
-        val memorizeRecords = fetchMemorizeRecords(currentDate.year, currentDate.monthValue)
-            .associate {
-                LocalDate.of(it.year, it.month, it.day) to it.words
-            }
+        val memorizeRecords = fetchMemorizeRecords(currentDate.year, currentDate.monthValue).toLocalDateMap()
         return calendarDates(currentDate, memorizeRecords).stream()
     }
 
     fun calendarDates(
-        today: LocalDate = LocalDate.now(),
+        current: LocalDate = LocalDate.now(),
         memorizeRecords: Map<LocalDate, List<String>>
     ): List<CalendarWeek> {
         val data = mutableListOf<CalendarWeek>()
-        val firstDay = LocalDate.of(today.year, today.monthValue, 1)
-        val lastDay = LocalDate.of(today.year, today.monthValue, firstDay.lengthOfMonth())
+        val firstDay = LocalDate.of(current.year, current.monthValue, 1)
+        val lastDay = LocalDate.of(current.year, current.monthValue, firstDay.lengthOfMonth())
         val lastWeek = lastDay[ChronoField.ALIGNED_WEEK_OF_MONTH]
         var curDay = firstDay
         while (data.size < lastWeek) {
@@ -163,7 +160,7 @@ class CalendarGrid(
             }
 
             btn.addClickListener {
-                //TODO click see details
+
             }
             btn
         } else Span()
@@ -174,4 +171,8 @@ class CalendarGrid(
         month.text = currentDate.month.name
         year.text = currentDate.year.toString()
     }
+}
+
+fun List<MemorizeRecord>.toLocalDateMap() = associate {
+    LocalDate.of(it.year, it.month, it.day) to it.words
 }

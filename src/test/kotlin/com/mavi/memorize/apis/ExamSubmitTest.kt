@@ -7,11 +7,16 @@ import com.mavi.memorize.data.entity.Vocabulary
 import com.mavi.memorize.helper.initFullFamiliarWords
 import com.mavi.memorize.helper.initVocabulary
 import com.mavi.memorize.helper.markAsStudy
+import com.mavi.memorize.ui.components.toLocalDateMap
+import io.mockk.every
+import io.mockk.mockkStatic
+import io.mockk.unmockkStatic
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
+import java.time.LocalDate
 
 @DBTest
 class ExamSubmitTest {
@@ -26,6 +31,10 @@ class ExamSubmitTest {
 
     @Autowired
     private lateinit var incorrectWordsApi: IncorrectWordsApi
+
+    @Autowired
+    private lateinit var memorizeRecordsApi: MemorizeRecordsApi
+
 
     private lateinit var vocabularies: List<Vocabulary>
 
@@ -153,6 +162,27 @@ class ExamSubmitTest {
         assertHasRound(ids[15], 4)
     }
 
+    @Test
+    fun `should record memorize words`() {
+        val date = LocalDate.of(2024, 3, 11)
+        mockkStatic(LocalDate::class)
+        every { LocalDate.now() } returns date
+        val rightFilled = vocabularies.subList(0, 10).associate { it.id to it.word }
+        val wrongFilled = vocabularies.subList(10, 20).associate { it.id to "anyway" }
+        vocabulariesApi.checkExamVocabularies(rightFilled + wrongFilled)
+        unmockkStatic(LocalDate::class)
+
+        assertThat(memorizeRecordsApi.findByMonth(2024, 3).toLocalDateMap())
+            .isEqualTo(
+                mapOf<LocalDate, List<String>>(
+                    date to rightFilled.values.toList()
+                )
+            )
+
+        assertThat(memorizeRecordsApi.findByMonth(2024, 2)).isEmpty()
+        assertThat(memorizeRecordsApi.findByMonth(2024, 4)).isEmpty()
+    }
+
     private fun assertHasRound(vocabularyId: String, round: Int) {
         val familiarWord = familiarWordsApi.findByVocabularyId(vocabularyId).get()
         when (round) {
@@ -163,6 +193,4 @@ class ExamSubmitTest {
             else -> assertThat(familiarWord.round1 == null && familiarWord.round2 == null && familiarWord.round3 == null && familiarWord.round4 == null).isTrue()
         }
     }
-
-    //add exam record
 }
