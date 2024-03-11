@@ -1,6 +1,10 @@
 package com.mavi.memorize.ui.helper
 
+import com.vaadin.flow.component.Component
+import com.vaadin.flow.component.grid.ColumnTextAlign
 import com.vaadin.flow.component.grid.Grid
+import com.vaadin.flow.component.orderedlayout.FlexComponent
+import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.component.textfield.TextField
 import com.vaadin.flow.data.binder.Binder
 import com.vaadin.flow.data.binder.Setter
@@ -13,6 +17,23 @@ fun <T> Grid.Column<T>.sort(name: String): Grid.Column<T> = setSortable(true).se
 fun <T> Grid.Column<T>.unsort(): Grid.Column<T> = setSortable(false)
 fun <T> Grid.Column<T>.tooltip(tooltipGenerator: SerializableFunction<T, String>): Grid.Column<T> =
     setTooltipGenerator(tooltipGenerator)
+
+fun <T> Grid.Column<T>.centerHeader(headerText: Component): Grid.Column<T> {
+    val headerContent = VerticalLayout()
+    headerContent.setWidthFull()
+    headerContent.isPadding = false
+    headerContent.isSpacing = false
+    headerContent.isMargin = false
+    headerContent.add(headerText)
+    headerContent.setHorizontalComponentAlignment(FlexComponent.Alignment.CENTER, headerText)
+    return setHeader(headerContent).setAutoWidth(true).unsort()
+}
+
+fun <T> Grid.Column<T>.cellAlign(colTextAlign: ColumnTextAlign? = ColumnTextAlign.CENTER): Grid.Column<T> {
+    textAlign = colTextAlign
+    return this
+}
+
 
 @Suppress("kotlin:S6530")
 fun <T> Grid.Column<T>.bindInlineTextEditor(

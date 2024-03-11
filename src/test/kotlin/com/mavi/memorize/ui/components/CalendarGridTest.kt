@@ -1,5 +1,6 @@
 package com.mavi.memorize.ui.components
 
+import com.mavi.memorize.data.entity.MemorizeRecord
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
@@ -9,7 +10,8 @@ class CalendarGridTest {
     @Test
     fun `should get calendar dates`() {
         val today = LocalDate.of(2024, 3, 8)
-        val dates = CalendarGrid().calendarDates(today).toList()
+        val dates = CalendarGrid { year, month -> fetchMemorizeRecords(year, month) }
+            .calendarDates(today, mapOf()).toList()
         assertThat(dates.size).isEqualTo(5)
 
         assertThat(dates[0].mon).isNull()
@@ -33,5 +35,9 @@ class CalendarGridTest {
         assertThat(dates[4].mon).isEqualTo(25)
         assertThat(dates[4].fri).isEqualTo(29)
         assertThat(dates[4].sun).isEqualTo(31)
+    }
+
+    private fun fetchMemorizeRecords(year: Int, month: Int): List<MemorizeRecord> {
+        TODO("Not yet implemented")
     }
 }

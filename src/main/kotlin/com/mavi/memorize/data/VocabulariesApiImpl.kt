@@ -18,7 +18,8 @@ class VocabulariesApiImpl(
     private val vocabularyRepository: VocabularyRepository,
     private val familiarWordsApi: FamiliarWordsApi,
     private val unfamiliarWordsApi: UnfamiliarWordsApi,
-    private val incorrectWordsApi: IncorrectWordsApi
+    private val incorrectWordsApi: IncorrectWordsApi,
+    private val memorizeRecordsApi: MemorizeRecordsApi,
 ) : VocabulariesApi {
     companion object {
         private val familiarWordsReviewCycleDays = listOf<Long>(2, 4, 7, 20)
@@ -105,6 +106,7 @@ class VocabulariesApiImpl(
 
     override fun checkExamVocabularies(filled: Map<String, String>) {
         val ids = filled.map { it.key }.toList()
+        val memorizeRecords = mutableListOf<String>()
         vocabularyRepository.findAllByIdIn(ids)
             .filter { filled[it.id] != null }
             .forEach {
@@ -112,6 +114,7 @@ class VocabulariesApiImpl(
                 if (it.word.lowercase() == word?.lowercase()) {
                     familiarWordsApi.addFamiliarWord(it.id)
                     incorrectWordsApi.reduceCountByVocabularyId(it.id)
+                    memorizeRecords.add(it.word)
                 } else {
                     familiarWordsApi.updateRoundByVocabularyId(it.id)
                     incorrectWordsApi.addIncorrectWord(it.id)
@@ -120,5 +123,8 @@ class VocabulariesApiImpl(
                 it.study = true
                 updateVocabulary(it)
             }
+        if (memorizeRecords.isNotEmpty()) {
+            memorizeRecordsApi.recordMemorizeWords(memorizeRecords)
+        }
     }
 }
