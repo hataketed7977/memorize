@@ -1,6 +1,7 @@
 package com.mavi.memorize.ui.components
 
 import com.mavi.memorize.data.entity.MemorizeRecord
+import com.mavi.memorize.ui.helper.addThemeVars
 import com.mavi.memorize.ui.helper.cellAlign
 import com.mavi.memorize.ui.helper.centerHeader
 import com.vaadin.flow.component.Component
@@ -35,6 +36,7 @@ class CalendarWeek {
 }
 
 data class CalendarDate(
+    val value: LocalDate? = null,
     val dayOfMonth: Int? = null,
     val isToday: Boolean = false,
     val memorizeRecords: List<String> = listOf()
@@ -49,6 +51,8 @@ class CalendarGrid(
     private var month = H2(currentDate.month.name)
     private var year = H2(currentDate.year.toString())
     private var dateClickListener: ((date: CalendarDate) -> Unit)? = null
+    private var selectedDate: LocalDate? = LocalDate.now()
+    private val items: MutableMap<CalendarDate, Button> = mutableMapOf()
 
     init {
         setWidthFull()
@@ -70,9 +74,10 @@ class CalendarGrid(
         }
 
         val today = Button("Today", Icon(VaadinIcon.CALENDAR))
-        today.addThemeVariants(ButtonVariant.LUMO_PRIMARY)
+        today.addThemeVars(ButtonVariant.LUMO_PRIMARY)
         today.addClickListener {
             this.currentDate = todayDate
+            this.selectedDate = todayDate
             refreshGrid()
         }
 
@@ -102,6 +107,7 @@ class CalendarGrid(
 
     private fun fetchData(query: Query<CalendarWeek, *>): Stream<CalendarWeek> {
         VaadinSpringDataHelpers.toSpringPageRequest(query)
+        items.clear()
         val memorizeRecords = fetchMemorizeRecords(currentDate.year, currentDate.monthValue).toLocalDateMap()
         return calendarDates(currentDate, memorizeRecords).stream()
     }
@@ -138,33 +144,55 @@ class CalendarGrid(
     }
 
     private fun calendarDate(curDay: LocalDate, memorizeRecords: Map<LocalDate, List<String>>) =
-        CalendarDate(curDay.dayOfMonth, todayDate == curDay, memorizeRecords[curDay] ?: listOf())
+        CalendarDate(curDay, curDay.dayOfMonth, todayDate == curDay, memorizeRecords[curDay] ?: listOf())
 
     private fun displayCalendarDate(date: CalendarDate): Component {
         return if (date.dayOfMonth != null) {
             val btn = Button("${date.dayOfMonth}")
             btn.width = "90px"
-
             if (date.memorizeRecords.isNotEmpty()) {
                 btn.icon = Icon(VaadinIcon.CHECK)
-                btn.addThemeVariants(ButtonVariant.LUMO_TERTIARY, ButtonVariant.LUMO_SUCCESS)
-            } else {
-                btn.addThemeVariants(ButtonVariant.LUMO_TERTIARY, ButtonVariant.LUMO_CONTRAST)
             }
-
-            if (date.isToday) {
-                btn.removeThemeVariants(
-                    ButtonVariant.LUMO_TERTIARY,
-                    ButtonVariant.LUMO_CONTRAST,
-                    ButtonVariant.LUMO_SUCCESS
-                )
-                btn.addThemeVariants(ButtonVariant.LUMO_PRIMARY)
+            items[date] = btn
+            renderSelection(date, btn)
+            btn.addClickListener {
+                selectedDate = date.value
+                items.forEach { (k, v) ->
+                    renderSelection(k, v)
+                }
             }
-
-            btn.addClickListener { dateClickListener?.invoke(date) }
             btn
         } else Span()
     }
+
+    private fun renderSelection(date: CalendarDate, btn: Button) {
+        if (selectedDate != date.value) {
+            defaultBtnTheme(date, btn)
+            return
+        }
+
+        if (date.isToday) {
+            btn.addThemeVars(ButtonVariant.LUMO_PRIMARY)
+        } else if (date.memorizeRecords.isNotEmpty()) {
+            btn.addThemeVars(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_SUCCESS)
+        } else {
+            btn.addThemeVars(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_CONTRAST)
+        }
+        dateClickListener?.invoke(date)
+    }
+
+    private fun defaultBtnTheme(date: CalendarDate, btn: Button) {
+        if (date.memorizeRecords.isNotEmpty()) {
+            btn.addThemeVars(ButtonVariant.LUMO_TERTIARY, ButtonVariant.LUMO_SUCCESS)
+        } else {
+            btn.addThemeVars(ButtonVariant.LUMO_TERTIARY, ButtonVariant.LUMO_CONTRAST)
+        }
+
+        if (date.isToday) {
+            btn.addThemeVars(ButtonVariant.LUMO_TERTIARY)
+        }
+    }
+
 
     private fun refreshGrid() {
         grid.dataProvider.refreshAll()

@@ -36,7 +36,7 @@ class StatisticsView(
         val splitLayout = SplitLayout(calendar, details)
         splitLayout.orientation = SplitLayout.Orientation.VERTICAL
         splitLayout.setSizeFull()
-        splitLayout.splitterPosition = 55.0
+        splitLayout.splitterPosition = 60.0
         add(splitLayout)
     }
 
