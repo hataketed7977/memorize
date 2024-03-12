@@ -9,9 +9,11 @@ import com.vaadin.flow.component.icon.Icon
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.component.splitlayout.SplitLayout
 import com.vaadin.flow.component.textfield.TextField
+import com.vaadin.flow.router.PageTitle
 import com.vaadin.flow.router.Route
 
 
+@PageTitle("Memorize Hub")
 @Route(value = "statistics", layout = MainView::class)
 @Uses(Icon::class)
 class StatisticsView(

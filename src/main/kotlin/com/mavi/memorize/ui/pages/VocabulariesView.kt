@@ -14,12 +14,14 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.data.provider.Query
 import com.vaadin.flow.data.provider.QuerySortOrder
 import com.vaadin.flow.data.provider.SortDirection
+import com.vaadin.flow.router.PageTitle
 import com.vaadin.flow.router.Route
 import com.vaadin.flow.router.RouteAlias
 import com.vaadin.flow.spring.data.VaadinSpringDataHelpers
 import org.vaadin.lineawesome.LineAwesomeIcon
 
 
+@PageTitle("Memorize Hub")
 @Route(value = "vocabularies", layout = MainView::class)
 @RouteAlias(value = "", layout = MainView::class)
 @Uses(Icon::class)

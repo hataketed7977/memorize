@@ -22,11 +22,13 @@ import com.vaadin.flow.component.icon.VaadinIcon
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.data.provider.Query
+import com.vaadin.flow.router.PageTitle
 import com.vaadin.flow.router.Route
 import com.vaadin.flow.spring.data.VaadinSpringDataHelpers
 import org.springframework.data.domain.Sort
 
 
+@PageTitle("Memorize Hub")
 @Route(value = "memorize", layout = MainView::class)
 @Uses(Icon::class)
 class MemorizeView(

@@ -14,10 +14,11 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.data.provider.Query
 import com.vaadin.flow.data.provider.QuerySortOrder
 import com.vaadin.flow.data.provider.SortDirection
+import com.vaadin.flow.router.PageTitle
 import com.vaadin.flow.router.Route
 import com.vaadin.flow.spring.data.VaadinSpringDataHelpers
 
-
+@PageTitle("Memorize Hub")
 @Route(value = "familiar", layout = MainView::class)
 @Uses(Icon::class)
 class FamiliarWordsView(
