@@ -44,3 +44,15 @@ List of memorized words for easy review.
 | Test | Junit5 + Spring Boot Test + Testcontainer + Mockk |
 | Build | Gradle |
 
+## Build
+```shell
+./gradlew clean vaadinBuildFrontend build
+```
+
+## Run
+```shell
+./gradlew bootRun
+
+#or
+java -jar build/libs/memorize-0.0.1-SNAPSHOT.jar
+```
