@@ -3,6 +3,8 @@ spring:
     url: jdbc:postgresql://localhost:54320/memorize
     username: postgres
     password: admin
+    hikari:
+      max-lifetime: 1800000
 server:
   port: 8888
   error:
