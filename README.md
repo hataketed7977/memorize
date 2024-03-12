@@ -34,11 +34,13 @@ List of memorized words for easy review.
 
 ## Tech Stack
 
-#### Language: Kotlin
-#### Database: PostgreSQL
-#### App Framework: Spring Boot
-#### Data Persistence: Spring JPA Data + Flyway
-#### UI: Vaddin
-#### Test: Junit5 + Spring Boot Test + Testcontainer + Mockk
-#### Build: Gradle
+|  Tech  | Stack  |
+|  ----  | ----  |
+| Language  | Kotlin |
+| App Framework  | Spring Boot |
+| UI | Vaddin |
+| Database  | PostgreSQL |
+| Data Persistence  | Spring JPA Data + Flyway |
+| Test | Junit5 + Spring Boot Test + Testcontainer + Mockk |
+| Build | Gradle |
 
