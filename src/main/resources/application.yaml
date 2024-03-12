@@ -3,10 +3,14 @@ spring:
     url: jdbc:postgresql://localhost:54320/memorize
     username: postgres
     password: admin
-    hikari:
-      max-lifetime: 1800000
 server:
   port: 8888
   error:
     include-stacktrace: ON_PARAM
     include-message: ALWAYS
+
+browser:
+  host: "http://localhost"
+  port: ${server.port}
+  path: "/"
+  open: true
