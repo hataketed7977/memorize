@@ -6,6 +6,7 @@ import com.vaadin.flow.component.grid.Grid
 import com.vaadin.flow.component.orderedlayout.FlexComponent
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.component.textfield.TextField
+import com.vaadin.flow.component.textfield.TextFieldBase
 import com.vaadin.flow.data.binder.Setter
 import com.vaadin.flow.function.SerializableFunction
 import com.vaadin.flow.function.ValueProvider
@@ -38,15 +39,15 @@ fun <T> Grid.Column<T>.cellAlign(colTextAlign: ColumnTextAlign? = ColumnTextAlig
 fun <T> Grid.Column<T>.bindInlineTextEditor(
     getter: ValueProvider<T, String>,
     setter: Setter<T, String>,
+    textField: TextFieldBase<*, String> = TextField(),
     required: Boolean = true
 ): Grid.Column<T> {
     return setEditorComponent {
-        val text = TextField()
-        text.setWidthFull()
+        textField.setWidthFull()
         val binder = (this.grid as Grid<T>).editor.binder
-        val bindingBuilder = binder.forField(text)
+        val bindingBuilder = binder.forField(textField)
         if (required) bindingBuilder.asRequired()
         bindingBuilder.bind(getter, setter)
-        text
+        textField
     }
 }

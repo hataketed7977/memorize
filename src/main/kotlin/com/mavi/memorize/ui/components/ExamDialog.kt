@@ -36,11 +36,10 @@ class ExamDialog(private val api: VocabulariesApi, private val onSearch: Runnabl
 
     private fun addForm() {
         val form = FormLayout()
-        form.addClassName("px-l")
         form.setSizeFull()
 
         vocabularies.forEach {
-            val word = TextField(it.meaning + " " + it.partOfSpeech)
+            val word = TextField(it.meaning + " (${it.partOfSpeech})")
             word.setId(it.id)
             form.add(word)
             fields.add(word)

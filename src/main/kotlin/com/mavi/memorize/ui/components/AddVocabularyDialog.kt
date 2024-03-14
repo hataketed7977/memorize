@@ -14,7 +14,7 @@ import com.vaadin.flow.component.textfield.TextField
 class AddVocabularyDialog(private val api: VocabulariesApi, private val onSearch: Runnable) : Dialog() {
     private val word = TextField("Word")
     private val pron = TextField("Pron.")
-    private val meaning = TextField("Meaning")
+    private val meaning = TextArea("Meaning")
     private val partOfSpeech = TextField("Part Of Speech")
     private val sentence = TextArea("Sentence")
 
@@ -44,8 +44,13 @@ class AddVocabularyDialog(private val api: VocabulariesApi, private val onSearch
     }
 
     private fun addForm() {
-        val form = FormLayout(word, pron, meaning, partOfSpeech, sentence)
-        form.setColspan(sentence, 2)
+        val form = FormLayout(word, pron, partOfSpeech, meaning, sentence)
+        form.setColspan(meaning, 3)
+        form.setColspan(sentence, 3)
+        form.setResponsiveSteps(
+            FormLayout.ResponsiveStep("0", 1),
+            FormLayout.ResponsiveStep("200px", 3)
+        )
         add(form)
     }
 

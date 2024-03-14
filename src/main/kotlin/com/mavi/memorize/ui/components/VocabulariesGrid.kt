@@ -13,6 +13,7 @@ import com.vaadin.flow.component.icon.Icon
 import com.vaadin.flow.component.icon.VaadinIcon
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.select.Select
+import com.vaadin.flow.component.textfield.TextArea
 import com.vaadin.flow.data.binder.Binder
 import com.vaadin.flow.data.provider.Query
 
@@ -39,7 +40,7 @@ class VocabulariesGrid(
             .bindInlineTextEditor({ it.word }, { it, v -> it.word = v })
 
         grid.addColumn(Vocabulary::meaning).header("Meaning").width(200).tooltip { it.meaning }
-            .bindInlineTextEditor({ it.meaning }, { it, v -> it.meaning = v })
+            .bindInlineTextEditor({ it.meaning }, { it, v -> it.meaning = v }, TextArea())
 
         grid.addColumn(Vocabulary::partOfSpeech).header("Part Of Speech")
             .bindInlineTextEditor({ it.partOfSpeech }, { it, v -> it.partOfSpeech = v })
@@ -48,7 +49,7 @@ class VocabulariesGrid(
             .bindInlineTextEditor({ it.pron }, { it, v -> it.pron = v })
 
         grid.addColumn(Vocabulary::sentence).header("Sentence").width(300).tooltip { it.sentence }
-            .bindInlineTextEditor({ it.sentence }, { it, v -> it.sentence = v }, false)
+            .bindInlineTextEditor({ it.sentence }, { it, v -> it.sentence = v }, TextArea(), false)
 
         if (!isReadMode) addOperationColumns()
         grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT)
