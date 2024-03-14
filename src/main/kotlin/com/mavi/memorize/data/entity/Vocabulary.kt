@@ -10,8 +10,6 @@ import java.time.Instant
 @Entity
 @Table(name = "t_vocabularies")
 class Vocabulary {
-
-
     @Id
     lateinit var id: String
     lateinit var word: String
@@ -22,7 +20,6 @@ class Vocabulary {
     lateinit var partOfSpeech: String
 
     var study: Boolean = false
-    var del: Boolean = false
     var sentence: String? = null
 
     @Column(name = "created_at")

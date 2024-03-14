@@ -21,9 +21,9 @@ class UnfamiliarWordsApiImpl(
         val ids = findAll().map { it.vocabularyId }
         val pageable = Pageable.ofSize(number)
         val words = if (ids.isEmpty()) {
-            vocabularyRepository.findAllByDelIsFalseAndStudyIsFalse(pageable)
+            vocabularyRepository.findAllByStudyIsFalse(pageable)
         } else {
-            vocabularyRepository.findAllByDelIsFalseAndStudyIsFalseAndIdNotIn(ids, pageable)
+            vocabularyRepository.findAllByStudyIsFalseAndIdNotIn(ids, pageable)
         }.map {
             val entity = UnfamiliarWord()
             entity.id = UUID.randomUUID().toString()

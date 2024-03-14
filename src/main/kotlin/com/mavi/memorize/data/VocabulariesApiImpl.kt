@@ -25,7 +25,7 @@ class VocabulariesApiImpl(
     }
 
     override fun findById(id: String): Optional<Vocabulary> {
-        return vocabularyRepository.findByIdAndDelIsFalse(id)
+        return vocabularyRepository.findById(id)
     }
 
     override fun addVocabulary(request: AddVocabularyRequest): Vocabulary {
@@ -38,7 +38,6 @@ class VocabulariesApiImpl(
         entity.sentence = request.sentence
         entity.createdAt = Instant.now()
         entity.study = false
-        entity.del = false
         return vocabularyRepository.saveAndFlush(entity)
     }
 
@@ -47,13 +46,10 @@ class VocabulariesApiImpl(
     }
 
     override fun removeVocabularyById(id: String) {
-        findById(id).ifPresent {
-            it.del = true
-            updateVocabulary(it)
-            familiarWordsApi.deleteByVocabularyId(id)
-            unfamiliarWordsApi.deleteByVocabularyId(id)
-            incorrectWordsApi.deleteByVocabularyId(id)
-        }
+        vocabularyRepository.deleteById(id)
+        familiarWordsApi.deleteByVocabularyId(id)
+        unfamiliarWordsApi.deleteByVocabularyId(id)
+        incorrectWordsApi.deleteByVocabularyId(id)
     }
 
     override fun updateVocabulary(item: Vocabulary): Vocabulary {
@@ -62,14 +58,14 @@ class VocabulariesApiImpl(
 
     override fun count(): Triple<All, Study, NotStudy> {
         return Triple(
-            first = vocabularyRepository.countByDelIsFalse(),
-            second = vocabularyRepository.countByDelIsFalseAndStudyIsTrue(),
-            third = vocabularyRepository.countByDelIsFalseAndStudyIsFalse(),
+            first = vocabularyRepository.count(),
+            second = vocabularyRepository.countByStudyIsTrue(),
+            third = vocabularyRepository.countByStudyIsFalse(),
         )
     }
 
     override fun findAllByIds(ids: List<String>, pageable: Pageable): Page<Vocabulary> {
-        return vocabularyRepository.findAllByIdInAndDelIsFalse(ids, pageable)
+        return vocabularyRepository.findAllByIdIn(ids, pageable)
     }
 
     override fun findExamVocabularies(): List<Vocabulary> {
