@@ -34,6 +34,7 @@ class IncorrectWordsView(
     }
 
     private fun configGridColumns() {
+        grid.setSizeFull()
         grid.addColumn(IncorrectVocabulary::word).header("Word").width(120).sort("word")
         grid.addColumn(IncorrectVocabulary::meaning).header("Meaning").width(200).tooltip { it.meaning }
         grid.addColumn(IncorrectVocabulary::count).header("Error Count").sort("count")

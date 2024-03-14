@@ -26,6 +26,19 @@ class AddVocabularyDialog(private val api: VocabulariesApi, private val onSearch
         addFooterActions()
     }
 
+    override fun open() {
+        clear()
+        super.open()
+    }
+
+    private fun clear(){
+        word.clear()
+        pron.clear()
+        meaning.clear()
+        partOfSpeech.clear()
+        sentence.clear()
+    }
+
     private fun addHeader() {
         header.add(H2("New Vocabulary"))
     }

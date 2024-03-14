@@ -34,6 +34,7 @@ class VocabulariesGrid(
     }
 
     private fun configColumns(isReadMode: Boolean): Grid<Vocabulary> {
+        grid.setSizeFull()
         grid.addColumn(Vocabulary::word).header("Word").width(120).sort("word")
             .bindInlineTextEditor({ it.word }, { it, v -> it.word = v })
 
@@ -46,7 +47,7 @@ class VocabulariesGrid(
         grid.addColumn(Vocabulary::pron).header("Pron.")
             .bindInlineTextEditor({ it.pron }, { it, v -> it.pron = v })
 
-        grid.addColumn(Vocabulary::sentence).header("Sentence").width(400).tooltip { it.sentence }
+        grid.addColumn(Vocabulary::sentence).header("Sentence").width(300).tooltip { it.sentence }
             .bindInlineTextEditor({ it.sentence }, { it, v -> it.sentence = v }, false)
 
         if (!isReadMode) addOperationColumns()

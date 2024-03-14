@@ -108,7 +108,6 @@ class VocabulariesApiImpl(
         val ids = filled.map { it.key }.toList()
         val memorizeRecords = mutableListOf<String>()
         vocabularyRepository.findAllByIdIn(ids)
-            .filter { filled[it.id] != null }
             .forEach {
                 val word = filled[it.id]
                 if (it.word.lowercase() == word?.lowercase()) {

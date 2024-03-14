@@ -15,4 +15,5 @@ interface FamiliarWordsApi {
     fun update(familiarWord: FamiliarWord): FamiliarWord
     fun updateRoundByVocabularyId(vocabularyId: String)
     fun findFamiliarVocabularies(pageable: Pageable): Page<FamiliarVocabulary>
+    fun removeByVocabularyId(get: String)
 }

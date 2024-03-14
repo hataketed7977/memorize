@@ -55,8 +55,7 @@ class ExamDialog(private val api: VocabulariesApi, private val onSearch: Runnabl
     private fun addFooterActions() {
         val exitBtn = Button("Exit", Icon(VaadinIcon.EXIT)) { close() }
         val submitBtn = Button("Submit", Icon(VaadinIcon.CHECK)) {
-            val filled: Map<VocabularyId, FilledValue> = fields.filter { it.value != null && it.value.trim() != "" }
-                .associate { it.id.get() to it.value }
+            val filled: Map<VocabularyId, FilledValue> = fields.associate { it.id.get() to it.value.trim().lowercase() }
             confirm.setText("Status: [ ${filled.size}/${vocabularies.size} ] filled")
             confirm.addConfirmListener {
                 api.checkExamVocabularies(filled)
