@@ -70,11 +70,9 @@ class WordsCountsTest {
 
     @Test
     fun `should count familiar words`() {
-        initVocabulary()
-            .filter { !it.del }
-            .forEach {
-                familiarWordsApi.addFamiliarWord(it.id)
-            }
+        initVocabulary().forEach {
+            familiarWordsApi.addFamiliarWord(it.id)
+        }
 
         val count = familiarWordsApi.count()
         assertThat(count).isEqualTo(8)
@@ -88,11 +86,9 @@ class WordsCountsTest {
 
     @Test
     fun `should count incorrect words`() {
-        initVocabulary()
-            .filter { !it.del }
-            .forEach {
-                incorrectWordsApi.addIncorrectWord(it.id)
-            }
+        initVocabulary().forEach {
+            incorrectWordsApi.addIncorrectWord(it.id)
+        }
 
         val count = incorrectWordsApi.count()
         assertThat(count).isEqualTo(8)

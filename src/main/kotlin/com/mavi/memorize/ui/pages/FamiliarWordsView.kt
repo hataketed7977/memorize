@@ -66,7 +66,7 @@ class FamiliarWordsView(
         )
         restoreBtn.icon = Icon(VaadinIcon.TIME_BACKWARD)
         restoreBtn.addClickListener {
-            restoreConfirmDialog.setId(vocabulary.id)
+            restoreConfirmDialog.setId(vocabulary.vocabularyId)
             restoreConfirmDialog.setText("Are you sure you want to restore word【${vocabulary.word}】to not study?")
             restoreConfirmDialog.open()
         }

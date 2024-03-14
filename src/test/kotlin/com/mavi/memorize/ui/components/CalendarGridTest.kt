@@ -1,6 +1,6 @@
 package com.mavi.memorize.ui.components
 
-import com.mavi.memorize.data.entity.MemorizeRecord
+import com.mavi.memorize.data.MemorizeRecord
 import com.mavi.memorize.helper.memorizeRecord
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -32,7 +32,7 @@ class CalendarGridTest {
         assertThat(dates[2].sun.dayOfMonth).isEqualTo(17)
 
         assertThat(dates[3].mon.dayOfMonth).isEqualTo(18)
-        assertThat(dates[3].mon.memorizeRecords).isEqualTo(listOf("test"))
+        assertThat(dates[3].mon.memorizeRecords.map { it.word }).isEqualTo(listOf("test"))
         assertThat(dates[3].thu.dayOfMonth).isEqualTo(21)
         assertThat(dates[3].sun.dayOfMonth).isEqualTo(24)
 
@@ -48,11 +48,8 @@ class CalendarGridTest {
             memorizeRecord(listOf("a"))
         ).toLocalDateMap()
 
-        assertThat(map).isEqualTo(
-            mapOf(
-                LocalDate.of(2024, 3, 11) to listOf("test", "a")
-            )
-        )
+        assertThat(map[LocalDate.of(2024, 3, 11)]?.map { it.word })
+            .isEqualTo(listOf("test", "a"))
     }
 
     private fun fetchMemorizeRecords(year: Int, month: Int): List<MemorizeRecord> {

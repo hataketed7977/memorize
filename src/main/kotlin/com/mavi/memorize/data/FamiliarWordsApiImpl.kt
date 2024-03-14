@@ -22,7 +22,8 @@ class FamiliarWordsApiImpl(
 ) : FamiliarWordsApi {
     override fun count(): Long = familiarWordRepository.count()
 
-    override fun addFamiliarWord(vocabularyId: String): FamiliarWord {
+    override fun addFamiliarWord(vocabularyId: String): FamiliarWord? {
+        if (vocabularyRepository.findById(vocabularyId).isEmpty) return null
         val familiarWord = familiarWordRepository.findByVocabularyId(vocabularyId)
         return if (familiarWord.isPresent) {
             updateRound(familiarWord.get())

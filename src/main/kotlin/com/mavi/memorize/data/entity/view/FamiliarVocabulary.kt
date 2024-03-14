@@ -12,6 +12,8 @@ import java.time.Instant
 class FamiliarVocabulary {
     @Id
     lateinit var id: String
+    @Column(name = "vocabulary_id")
+    lateinit var vocabularyId: String
 
     lateinit var word: String
     lateinit var meaning: String

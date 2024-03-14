@@ -8,7 +8,7 @@ import java.util.*
 
 interface IncorrectWordsApi {
     fun count(): Long
-    fun addIncorrectWord(vocabularyId: String): IncorrectWord
+    fun addIncorrectWord(vocabularyId: String): IncorrectWord?
     fun deleteByVocabularyId(id: String)
     fun findAllByCountGreaterThanZero(): List<IncorrectWord>
     fun reduceCountByVocabularyId(vocabularyId: String)

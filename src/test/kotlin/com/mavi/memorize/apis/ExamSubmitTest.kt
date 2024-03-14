@@ -7,9 +7,6 @@ import com.mavi.memorize.helper.initFullFamiliarWords
 import com.mavi.memorize.helper.initVocabulary
 import com.mavi.memorize.helper.markAsStudy
 import com.mavi.memorize.ui.components.toLocalDateMap
-import io.mockk.every
-import io.mockk.mockkStatic
-import io.mockk.unmockkStatic
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -114,7 +111,7 @@ class ExamSubmitTest {
             incorrectWordsApi.addIncorrectWord(it)
         }
         incorrectWords.forEach {
-            assertThat(incorrectWordsApi.findByVocabularyId(it.vocabularyId).get().count).isOne()
+            assertThat(incorrectWordsApi.findByVocabularyId(it!!.vocabularyId).get().count).isOne()
         }
 
         vocabulariesApi.checkExamVocabularies(rightFilled + wrongFilled)
@@ -123,7 +120,7 @@ class ExamSubmitTest {
         assertThat(vocabularyIds).containsAnyElementsOf(wrongFilled.map { it.key })
         assertThat(vocabularyIds).doesNotContainAnyElementsOf(rightFilled.map { it.key })
         incorrectWords.forEach {
-            assertThat(incorrectWordsApi.findByVocabularyId(it.vocabularyId).get().count).isZero()
+            assertThat(incorrectWordsApi.findByVocabularyId(it!!.vocabularyId).get().count).isZero()
         }
     }
 
@@ -163,20 +160,12 @@ class ExamSubmitTest {
 
     @Test
     fun `should record memorize words`() {
-        val date = LocalDate.of(2024, 3, 11)
-        mockkStatic(LocalDate::class)
-        every { LocalDate.now() } returns date
         val rightFilled = vocabularies.subList(0, 10).associate { it.id to it.word }
         val wrongFilled = vocabularies.subList(10, 20).associate { it.id to "anyway" }
         vocabulariesApi.checkExamVocabularies(rightFilled + wrongFilled)
-        unmockkStatic(LocalDate::class)
 
-        assertThat(memorizeRecordsApi.findByMonth(2024, 3).toLocalDateMap())
-            .isEqualTo(
-                mapOf<LocalDate, List<String>>(
-                    date to rightFilled.values.toList()
-                )
-            )
+        val dateMap = memorizeRecordsApi.findByMonth(2024, 3).toLocalDateMap()
+        assertThat(dateMap[LocalDate.now()]?.map { it.word }).isEqualTo(rightFilled.values.toList())
 
         assertThat(memorizeRecordsApi.findByMonth(2024, 2)).isEmpty()
         assertThat(memorizeRecordsApi.findByMonth(2024, 4)).isEmpty()

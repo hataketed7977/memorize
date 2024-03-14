@@ -16,8 +16,7 @@ fun VocabulariesApi.addStudiedVocabulary(request: AddVocabularyRequest): Vocabul
 
 fun VocabulariesApi.addDeletedVocabulary(request: AddVocabularyRequest): Vocabulary {
     val vocabulary = addVocabulary(request)
-    vocabulary.del = true
-    updateVocabulary(vocabulary)
+    removeVocabularyById(vocabulary.id)
     return vocabulary
 }
 
@@ -47,7 +46,7 @@ fun VocabulariesApi.initVocabulary(notStudy: Int, study: Int = 0, del: Int = 0):
 
 fun FamiliarWordsApi.initFamiliarWord(vocabularyId: String, beforeDays: Long, round: Int = 0) {
     val familiarWord = addFamiliarWord(vocabularyId)
-    familiarWord.createdAt = Instant.now().minus(beforeDays, ChronoUnit.DAYS)
+    familiarWord!!.createdAt = Instant.now().minus(beforeDays, ChronoUnit.DAYS)
     if (round >= 1) familiarWord.round1 = Instant.now()
     if (round >= 2) familiarWord.round2 = Instant.now()
     if (round >= 3) familiarWord.round3 = Instant.now()

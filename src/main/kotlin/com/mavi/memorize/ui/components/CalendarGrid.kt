@@ -212,7 +212,7 @@ fun List<MemorizeRecord>.toLocalDateMap(): Map<LocalDate, List<FamiliarVocabular
         val key = LocalDate.of(it.year, it.month, it.day)
         val value = map[key]
         if (value != null) {
-            map[key] = (value + it.words).distinct()
+            map[key] = (value + it.words).distinctBy { it.word }
         } else {
             map[key] = it.words
         }

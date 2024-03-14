@@ -1,8 +1,8 @@
 package com.mavi.memorize.helper
 
 import com.mavi.memorize.api.request.AddVocabularyRequest
-import com.mavi.memorize.data.entity.MemorizeRecord
-import java.time.Instant
+import com.mavi.memorize.data.MemorizeRecord
+import com.mavi.memorize.data.entity.view.FamiliarVocabulary
 import java.util.*
 
 fun addVocabularyRequest(
@@ -24,13 +24,15 @@ fun memorizeRecord(
     year: Int = 2024,
     month: Int = 3,
     day: Int = 11,
-): MemorizeRecord {
-    val entity = MemorizeRecord()
-    entity.id = UUID.randomUUID().toString()
-    entity.words = words
-    entity.createdAt = Instant.now()
-    entity.year = year
-    entity.month = month
-    entity.day = day
-    return entity
-}
+): MemorizeRecord = MemorizeRecord(
+    year = year,
+    month = month,
+    day = day,
+    words = words.map {
+        val item = FamiliarVocabulary()
+        item.word = it
+        item.partOfSpeech = "n."
+        item.meaning = "test meaning"
+        item
+    }
+)
