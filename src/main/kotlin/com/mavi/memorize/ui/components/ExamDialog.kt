@@ -18,7 +18,8 @@ import com.vaadin.flow.component.textfield.TextField
 class ExamDialog(private val api: VocabulariesApi, private val onSearch: Runnable) : Dialog() {
     private val fields = mutableListOf<TextField>()
     private var vocabularies: List<Vocabulary> = api.findExamVocabularies()
-    private val confirm = createSubmitConfirmDialog()
+    private val submitConfirm = createSubmitConfirmDialog()
+    private val exitConfirm = createExitConfirmDialog()
 
     init {
         isModal = false
@@ -52,16 +53,22 @@ class ExamDialog(private val api: VocabulariesApi, private val onSearch: Runnabl
     }
 
     private fun addFooterActions() {
-        val exitBtn = Button("Exit", Icon(VaadinIcon.EXIT)) { close() }
+        val exitBtn = Button("Exit", Icon(VaadinIcon.EXIT)) {
+            exitConfirm.addConfirmListener {
+                close()
+            }
+            exitConfirm.open()
+        }
+
         val submitBtn = Button("Submit", Icon(VaadinIcon.CHECK)) {
             val filled: Map<VocabularyId, FilledValue> = fields.associate { it.id.get() to it.value.trim().lowercase() }
-            confirm.setText("Status: [ ${filled.size}/${vocabularies.size} ] filled")
-            confirm.addConfirmListener {
+            submitConfirm.setText("Status: [ ${filled.size}/${vocabularies.size} ] filled")
+            submitConfirm.addConfirmListener {
                 api.checkExamVocabularies(filled)
                 onSearch.run()
                 close()
             }
-            confirm.open()
+            submitConfirm.open()
         }
         exitBtn.addThemeVariants(ButtonVariant.LUMO_ERROR)
         submitBtn.addThemeVariants(ButtonVariant.LUMO_SUCCESS)
@@ -71,6 +78,14 @@ class ExamDialog(private val api: VocabulariesApi, private val onSearch: Runnabl
     private fun createSubmitConfirmDialog(): ConfirmDialog {
         val dialog = ConfirmDialog()
         dialog.setHeader("Are you sure to submit?")
+        dialog.setCancelable(true)
+        return dialog
+    }
+
+    private fun createExitConfirmDialog(): ConfirmDialog {
+        val dialog = ConfirmDialog()
+        dialog.setText("All filled word will be lost.")
+        dialog.setHeader("Are you sure to exit?")
         dialog.setCancelable(true)
         return dialog
     }

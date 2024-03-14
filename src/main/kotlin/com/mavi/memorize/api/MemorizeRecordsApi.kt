@@ -1,8 +1,7 @@
 package com.mavi.memorize.api
 
-import com.mavi.memorize.data.entity.MemorizeRecord
+import com.mavi.memorize.data.MemorizeRecord
 
-interface MemorizeRecordsApi {
+fun interface MemorizeRecordsApi {
     fun findByMonth(year: Int, month: Int): List<MemorizeRecord>
-    fun recordMemorizeWords(words: List<String>): List<MemorizeRecord>
 }

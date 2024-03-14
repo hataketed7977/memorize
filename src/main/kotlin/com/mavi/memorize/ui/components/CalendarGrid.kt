@@ -1,6 +1,7 @@
 package com.mavi.memorize.ui.components
 
-import com.mavi.memorize.data.entity.MemorizeRecord
+import com.mavi.memorize.data.MemorizeRecord
+import com.mavi.memorize.data.entity.view.FamiliarVocabulary
 import com.mavi.memorize.ui.helper.addThemeVars
 import com.mavi.memorize.ui.helper.cellAlign
 import com.mavi.memorize.ui.helper.centerHeader
@@ -39,7 +40,7 @@ data class CalendarDate(
     val value: LocalDate? = null,
     val dayOfMonth: Int? = null,
     val isToday: Boolean = false,
-    val memorizeRecords: List<String> = listOf()
+    val memorizeRecords: List<FamiliarVocabulary> = listOf()
 )
 
 class CalendarGrid(
@@ -114,7 +115,7 @@ class CalendarGrid(
 
     fun calendarDates(
         current: LocalDate = LocalDate.now(),
-        memorizeRecords: Map<LocalDate, List<String>>
+        memorizeRecords: Map<LocalDate, List<FamiliarVocabulary>>
     ): List<CalendarWeek> {
         val data = mutableListOf<CalendarWeek>()
         val firstDay = LocalDate.of(current.year, current.monthValue, 1)
@@ -143,7 +144,7 @@ class CalendarGrid(
         return data
     }
 
-    private fun calendarDate(curDay: LocalDate, memorizeRecords: Map<LocalDate, List<String>>) =
+    private fun calendarDate(curDay: LocalDate, memorizeRecords: Map<LocalDate, List<FamiliarVocabulary>>) =
         CalendarDate(curDay, curDay.dayOfMonth, todayDate == curDay, memorizeRecords[curDay] ?: listOf())
 
     private fun displayCalendarDate(date: CalendarDate): Component {
@@ -205,8 +206,8 @@ class CalendarGrid(
     }
 }
 
-fun List<MemorizeRecord>.toLocalDateMap(): Map<LocalDate, List<String>> {
-    val map = mutableMapOf<LocalDate, List<String>>()
+fun List<MemorizeRecord>.toLocalDateMap(): Map<LocalDate, List<FamiliarVocabulary>> {
+    val map = mutableMapOf<LocalDate, List<FamiliarVocabulary>>()
     forEach {
         val key = LocalDate.of(it.year, it.month, it.day)
         val value = map[key]

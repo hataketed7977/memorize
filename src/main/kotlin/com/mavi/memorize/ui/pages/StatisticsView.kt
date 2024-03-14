@@ -1,7 +1,8 @@
 package com.mavi.memorize.ui.pages
 
 import com.mavi.memorize.api.MemorizeRecordsApi
-import com.mavi.memorize.data.entity.MemorizeRecord
+import com.mavi.memorize.data.MemorizeRecord
+import com.mavi.memorize.data.entity.view.FamiliarVocabulary
 import com.mavi.memorize.ui.components.CalendarGrid
 import com.vaadin.flow.component.dependency.Uses
 import com.vaadin.flow.component.formlayout.FormLayout
@@ -42,13 +43,14 @@ class StatisticsView(
         add(splitLayout)
     }
 
-    private fun buildMemorizeRecords(memorizeRecords: List<String>) {
+    private fun buildMemorizeRecords(memorizeRecords: List<FamiliarVocabulary>) {
         details.removeAll()
         details.add(
             memorizeRecords.map {
                 val field = TextField()
                 field.isReadOnly = true
-                field.value = it
+                field.value = it.word
+                field.setTooltipText("(${it.partOfSpeech}) " + it.meaning)
                 field
             }
         )
