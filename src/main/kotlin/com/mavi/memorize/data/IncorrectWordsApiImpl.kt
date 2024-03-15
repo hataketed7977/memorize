@@ -21,7 +21,7 @@ class IncorrectWordsApiImpl(
     private val incorrectVocabularyRepository: IncorrectVocabularyRepository,
     private val vocabularyRepository: VocabularyRepository
 ) : IncorrectWordsApi {
-    override fun count(): Long = incorrectWordRepository.count()
+    override fun count(): Long = incorrectWordRepository.countByCountGreaterThan(0)
     override fun addIncorrectWord(vocabularyId: String): IncorrectWord? {
         if (vocabularyRepository.findById(vocabularyId).isEmpty) return null
         val word = incorrectWordRepository

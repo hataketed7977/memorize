@@ -10,4 +10,5 @@ interface IncorrectWordRepository : JpaRepository<IncorrectWord, String> {
     fun findByVocabularyId(vocabularyId: String): Optional<IncorrectWord>
     fun findAllByCountGreaterThan(count: Int): List<IncorrectWord>
     fun deleteByVocabularyId(vocabularyId: String)
+    fun countByCountGreaterThan(count: Int): Long
 }
