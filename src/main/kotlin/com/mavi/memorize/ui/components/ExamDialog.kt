@@ -41,6 +41,7 @@ class ExamDialog(private val api: VocabulariesApi, private val onSearch: Runnabl
 
         vocabularies.forEach {
             val word = TextField(it.meaning + " (${it.partOfSpeech})")
+            word.setTooltipText(word.label)
             word.setId(it.id)
             form.add(word)
             fields.add(word)
