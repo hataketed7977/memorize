@@ -48,11 +48,14 @@ class IncorrectWordsApiImpl(
         return incorrectWordRepository.findAllByCountGreaterThan(0)
     }
 
-    override fun reduceCountByVocabularyId(vocabularyId: String) {
+    override fun reduceCountByVocabularyId(vocabularyId: String): Boolean {
+        var hasReduce = false
         incorrectWordRepository.findByVocabularyId(vocabularyId).ifPresent {
             it.count -= 1
             incorrectWordRepository.saveAndFlush(it)
+            hasReduce = true
         }
+        return hasReduce
     }
 
     override fun findByVocabularyId(vocabularyId: String): Optional<IncorrectWord> {

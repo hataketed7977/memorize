@@ -105,8 +105,9 @@ class VocabulariesApiImpl(
             .forEach {
                 val word = filled[it.id]
                 if (it.word.lowercase() == word?.lowercase()) {
-                    familiarWordsApi.addFamiliarWord(it.id)
-                    incorrectWordsApi.reduceCountByVocabularyId(it.id)
+                    val hasReduce = incorrectWordsApi.reduceCountByVocabularyId(it.id)
+                    familiarWordsApi.addFamiliarWord(it.id, hasReduce)
+
                 } else {
                     familiarWordsApi.updateRoundByVocabularyId(it.id)
                     incorrectWordsApi.addIncorrectWord(it.id)

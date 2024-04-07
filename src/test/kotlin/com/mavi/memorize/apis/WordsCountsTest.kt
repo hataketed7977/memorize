@@ -71,7 +71,7 @@ class WordsCountsTest {
     @Test
     fun `should count familiar words`() {
         initVocabulary().forEach {
-            familiarWordsApi.addFamiliarWord(it.id)
+            familiarWordsApi.addFamiliarWord(it.id, false)
         }
 
         val count = familiarWordsApi.count()

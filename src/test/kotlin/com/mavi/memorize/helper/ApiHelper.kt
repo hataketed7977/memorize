@@ -3,6 +3,7 @@ package com.mavi.memorize.helper
 import com.mavi.memorize.api.FamiliarWordsApi
 import com.mavi.memorize.api.VocabulariesApi
 import com.mavi.memorize.api.request.AddVocabularyRequest
+import com.mavi.memorize.data.entity.FamiliarWord
 import com.mavi.memorize.data.entity.Vocabulary
 import java.time.Instant
 import java.time.temporal.ChronoUnit
@@ -44,14 +45,15 @@ fun VocabulariesApi.initVocabulary(notStudy: Int, study: Int = 0, del: Int = 0):
     return vocabularies
 }
 
-fun FamiliarWordsApi.initFamiliarWord(vocabularyId: String, beforeDays: Long, round: Int = 0) {
-    val familiarWord = addFamiliarWord(vocabularyId)
+fun FamiliarWordsApi.initFamiliarWord(vocabularyId: String, beforeDays: Long, round: Int = 0): FamiliarWord {
+    val familiarWord = addFamiliarWord(vocabularyId, false)
     familiarWord!!.createdAt = Instant.now().minus(beforeDays, ChronoUnit.DAYS)
     if (round >= 1) familiarWord.round1 = Instant.now()
     if (round >= 2) familiarWord.round2 = Instant.now()
     if (round >= 3) familiarWord.round3 = Instant.now()
     if (round >= 4) familiarWord.round4 = Instant.now()
     update(familiarWord)
+    return familiarWord
 }
 
 fun FamiliarWordsApi.initFullFamiliarWords(vocabularyId: List<String>) {

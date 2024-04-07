@@ -8,7 +8,7 @@ import java.util.*
 
 interface FamiliarWordsApi {
     fun count(): Long
-    fun addFamiliarWord(vocabularyId: String): FamiliarWord?
+    fun addFamiliarWord(vocabularyId: String, fromIncorrectWords: Boolean): FamiliarWord?
     fun deleteByVocabularyId(id: String)
     fun findAllNotStartRounds(): List<FamiliarWord>
     fun findByVocabularyId(vocabularyId: String): Optional<FamiliarWord>

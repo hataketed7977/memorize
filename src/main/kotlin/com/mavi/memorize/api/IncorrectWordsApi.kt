@@ -11,7 +11,7 @@ interface IncorrectWordsApi {
     fun addIncorrectWord(vocabularyId: String): IncorrectWord?
     fun deleteByVocabularyId(id: String)
     fun findAllByCountGreaterThanZero(): List<IncorrectWord>
-    fun reduceCountByVocabularyId(vocabularyId: String)
+    fun reduceCountByVocabularyId(vocabularyId: String): Boolean
     fun findByVocabularyId(vocabularyId: String): Optional<IncorrectWord>
     fun findIncorrectVocabularies(pageable: Pageable): Page<IncorrectVocabulary>
 

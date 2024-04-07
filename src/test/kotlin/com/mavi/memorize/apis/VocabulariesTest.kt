@@ -37,7 +37,7 @@ class VocabulariesTest {
     fun `should remove all words when remove vocabulary`() {
         val vocabulary = vocabulariesApi.addVocabulary(addVocabularyRequest())
         unfamiliarWordsApi.batchCreateUnfamiliarWords(1)
-        familiarWordsApi.addFamiliarWord(vocabulary.id)
+        familiarWordsApi.addFamiliarWord(vocabulary.id, false)
         incorrectWordsApi.addIncorrectWord(vocabulary.id)
         assertRelatedWordsArePresent(vocabulary.id)
 

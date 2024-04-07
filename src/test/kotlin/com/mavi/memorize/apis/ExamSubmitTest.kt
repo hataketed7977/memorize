@@ -7,11 +7,15 @@ import com.mavi.memorize.helper.initFullFamiliarWords
 import com.mavi.memorize.helper.initVocabulary
 import com.mavi.memorize.helper.markAsStudy
 import com.mavi.memorize.ui.components.toLocalDateMap
+import io.mockk.every
+import io.mockk.mockkStatic
+import io.mockk.unmockkStatic
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
+import java.time.Instant
 import java.time.LocalDate
 
 @DBTest
@@ -164,11 +168,12 @@ class ExamSubmitTest {
         val wrongFilled = vocabularies.subList(10, 20).associate { it.id to "anyway" }
         vocabulariesApi.checkExamVocabularies(rightFilled + wrongFilled)
 
-        val dateMap = memorizeRecordsApi.findByMonth(2024, 3).toLocalDateMap()
+        val now = LocalDate.now()
+        val dateMap = memorizeRecordsApi.findByMonth(now.year, now.monthValue).toLocalDateMap()
         assertThat(dateMap[LocalDate.now()]?.map { it.word }).isEqualTo(rightFilled.values.toList())
 
-        assertThat(memorizeRecordsApi.findByMonth(2024, 2)).isEmpty()
-        assertThat(memorizeRecordsApi.findByMonth(2024, 4)).isEmpty()
+        assertThat(memorizeRecordsApi.findByMonth(now.year, now.monthValue - 1)).isEmpty()
+        assertThat(memorizeRecordsApi.findByMonth(now.year, now.monthValue + 1)).isEmpty()
     }
 
     private fun assertHasRound(vocabularyId: String, round: Int) {
